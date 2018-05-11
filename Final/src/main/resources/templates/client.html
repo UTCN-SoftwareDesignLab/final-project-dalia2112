@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Clients</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <style>
+        form {
+            margin-top: 100px;
+        }
+
+
+    </style>
+
+</head>
+<body>
+<center><h1 style="font-size:60px;">Clients</h1></center>
+<div class="container">
+    <!--<form th:action="@{/client}" method="get">-->
+        <!--<input type="submit" class="button" name="reg" value="Add Users"/>-->
+    <!--</form>-->
+
+
+    <form th:action="@{/client}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+        <div class="form-group">
+            <label for="name" class="col-sm-4 control-label">Name:</label>
+            <div class="col-sm-8">
+                <input type="text" name="name" id="name" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="money" class="col-sm-4 control-label">Money:</label>
+            <div class="col-sm-8">
+                <input type="number" name="money" id="money" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="orderId" class="col-sm-4 control-label">OrderId:</label>
+            <div class="col-sm-8">
+                <input type="number" name="orderId" id="orderId" class="form-control"/>
+            </div>
+        </div>
+
+
+
+        <input type="submit" class="button" name="addClient" value="Add client"/>
+
+
+        <!-- ALERTS -->
+        <div th:if="${updUErr}" class="alert alert-danger" role="alert" th:text="${updMessage}"></div>
+        <div th:if="${updUSucc}" class="alert alert-success" role="alert" th:text="${updMessage2}"></div>
+
+    </form>
+
+
+    <form th:action="@{/clientView}" method="get">
+        <input type="submit" class="button" name="viewUsers" value="View Users"/>
+    </form>
+
+    <form th:action="@{/logout}" method="get">
+        <input type="submit" class="button" name="logout" value="Logout"/>
+    </form>
+</div>
+
+<div th:if="${param.success}">
+    Author created successfully!
+</div>
+
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Money</th>
+        //<th>OrderId</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="client : ${clients}">
+        <td th:text="${client.id}"></td>
+        <td th:text="${client.name}"></td>
+        <td th:text="${client.money}"></td>
+        <!--<td th:text="${client.order.id}"></td>-->
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+</html>

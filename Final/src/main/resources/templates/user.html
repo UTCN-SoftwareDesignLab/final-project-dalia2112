@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Users</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <style>
+        form {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+<center><h1 style="font-size:60px;">Users</h1></center>
+<h2><a href="/register">Register user</a><br/></h2>
+<div class="container">
+
+    <form th:action="@{/user}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+        <div class="form-group">
+            <label for="username" class="col-sm-4 control-label">Username:</label>
+            <div class="col-sm-8">
+                <input type="text" name="username" id="username" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="col-sm-4 control-label">Password:</label>
+            <div class="col-sm-8">
+                <input type="password" name="password" id="password" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="role" class="col-sm-4 control-label">Role:</label>
+            <div class="col-sm-8">
+                <input type="text" name="role" id="role" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id" class="col-sm-4 control-label">ID for update/delete</label>
+            <div class="col-sm-8">
+                <input type="number" name="id" id="id" class="form-control"/>
+            </div>
+        </div>
+
+        <input type="submit" class="button" name="update" value="Update User"/>
+        <input type="submit" class="button" name="dlt" value="Delete User"/>
+
+        <!-- ALERTS -->
+        <div th:if="${updUErr}" class="alert alert-danger" role="alert" th:text="${updMessage}"></div>
+        <div th:if="${updUSucc}" class="alert alert-success" role="alert" th:text="${updMessage2}"></div>
+    </form>
+
+
+    <form th:action="@{/userView}" method="get">
+        <input type="submit" class="button" name="viewUsers" value="View Users"/>
+    </form>
+
+    <form th:action="@{/logout}" method="get">
+        <input type="submit" class="button" name="logout" value="Logout"/>
+    </form>
+</div>
+
+<div th:if="${param.success}">
+    Author created successfully!
+</div>
+
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.password}"></td>
+        <td th:text="${user.role}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+</html>

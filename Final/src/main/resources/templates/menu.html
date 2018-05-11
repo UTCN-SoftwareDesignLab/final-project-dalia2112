@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <style>
+        form {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body onload="myFunction2()">
+<center><h1 style="font-size:60px;">Menu</h1></center>
+<h2><a href="/user">Back to user</a><br/></h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Password</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.password}"></td>
+        <td th:text="${user.role}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+<div class="container">
+
+
+    <form th:action="@{/menu}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+
+        <!--<span th:text="${solita}"/>-->
+
+        <!--<select id="mySelect">-->
+            <!--<option>Apple</option>-->
+            <!--<option>Orange</option>-->
+            <!--<option>Pineapple</option>-->
+            <!--<option>Banana</option>-->
+        <!--</select>-->
+
+        <!--<button type="button" onclick="myFunction()">Display index</button>-->
+
+        <!--<script>-->
+        <!--function myFunction() {-->
+        <!--var x = document.getElementById("mySelect").selectedIndex;-->
+        <!--var y = document.getElementById("mySelect").options;-->
+        <!--alert("Index: " + y[x].index + " is " + y[x].text);-->
+        <!--}-->
+
+
+        <!--</script>-->
+
+
+        <div class="form-group">
+            <label for="name" class="col-sm-4 control-label">Name of the dish:</label>
+            <div class="col-sm-8">
+                <input type="text" name="name" id="name" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="price" class="col-sm-4 control-label">Price:</label>
+            <div class="col-sm-8">
+                <input type="number" name="price" id="price" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="online" class="col-sm-4 control-label">Available Online:</label>
+            <div class="col-sm-8">
+                <input type="text" name="online" id="online" class="form-control"/>
+            </div>
+        </div>
+
+        <!--<div class="form-group">-->
+            <!--<label for="id" class="col-sm-4 control-label">ID for update/delete</label>-->
+            <!--<div class="col-sm-8">-->
+                <!--<input type="number" name="id" id="id" class="form-control"/>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<input type="submit" class="button" name="update" value="Update User"/>-->
+        <!--<input type="submit" class="button" name="dlt" value="Delete User"/>-->
+
+        <!-- ALERTS -->
+        <div th:if="${updUErr}" class="alert alert-danger" role="alert" th:text="${updMessage}"></div>
+        <div th:if="${updUSucc}" class="alert alert-success" role="alert" th:text="${updMessage2}"></div>
+    </form>
+
+    <!--<button onclick="myFunction2()">Try it</button>-->
+    <script>
+        function myFunction2() {
+            var x = document.createElement("SELECT");
+            x.setAttribute("id", "mySelect2");
+            document.body.appendChild(x);
+
+            var z=[]; var t=[];
+            var i;
+            var ing=["bread","flour","salt","honey","sugar","potato","pepper","chilly","onion","garlic","salad","tomatoe","cocoa","vanilla","fruits","dough","milk","cheese","ham","chicken","beaf","pork"]
+            //var ingr = document.getElementById("solita").value;
+            for(i=0;i<22;i++){
+                z[i]= document.createElement("option");
+                z[i].setAttribute("value", "car"+i);
+                t[i]=document.createTextNode(ing[i]);
+                z[i].appendChild(t[i]);
+                document.getElementById("mySelect2").appendChild(z[i]);
+            }
+
+        }
+
+
+
+    </script>
+
+    <button type="button" onclick="myFunction()">Display index</button>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("mySelect2").selectedIndex;
+            var y = document.getElementById("mySelect2").options;
+            alert("Index: " + y[x].index + " is " + y[x].text);
+        }
+    </script>
+
+    <form th:action="@{/dishesView}" method="get">
+        <input type="submit" class="button" name="viewDishes" value="View Dishes"/>
+    </form>
+
+    <form th:action="@{/logout}" method="get">
+        <input type="submit" class="button" name="logout" value="Logout"/>
+    </form>
+</div>
+
+
+</body>
+</html>
