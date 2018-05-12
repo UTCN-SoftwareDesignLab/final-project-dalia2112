@@ -11,4 +11,6 @@ public interface IngredientService {
     void createIngredients();
 
     List<Ingredient> findAll();
+
+    List<Ingredient> findByName(String name);
 }

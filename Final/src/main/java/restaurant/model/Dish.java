@@ -58,4 +58,12 @@ public class Dish {
     public void setAvailableOnline(boolean availableOnline) {
         this.availableOnline = availableOnline;
     }
+
+    public String getIngredientList(){
+        String t="";
+        for(Ingredient ingredient:ingredients){
+            t+=ingredient.getName()+" ";
+        }
+        return t;
+    }
 }

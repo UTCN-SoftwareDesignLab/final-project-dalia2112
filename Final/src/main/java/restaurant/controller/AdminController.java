@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import restaurant.model.Constants;
+import restaurant.model.Dish;
 import restaurant.model.Ingredient;
 import restaurant.model.User;
 import restaurant.model.validation.Notification;
@@ -88,18 +89,58 @@ public class AdminController {
 
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
     public String showMenu(Model model,HttpServletRequest request) {
-        List<Ingredient> ingredients= ingredientService.findAll();
-//        List<String> nameingr=new ArrayList<>(Arrays.asList(Constants.Ingredients.ALL));
-        String nm[]=Constants.Ingredients.ALL;
-        model.addAttribute("solita",nm);
+        return "menu";
+    }
+
+    //ADD DISH
+    @RequestMapping(value = "/menu",params ="ps",method = RequestMethod.POST)
+    public String addDish(HttpServletRequest request,@RequestParam String name,@RequestParam float price,@RequestParam String online) {
+
+        boolean ok;
+        if(online.equalsIgnoreCase("yes")) ok=true;
+        else ok=false;
+        System.out.println("aci");
+        Ingredient ingredient=ingredientService.findByName(request.getParameter("mySelect2")).get(0);
+        System.out.println("aci2");
+        dishService.addDish(name,ingredient,price,ok);
         System.out.println(request.getParameter("mySelect2"));
         return "menu";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public String app(HttpServletRequest request) {
+    //VIEW DISHES
+    @RequestMapping(value = "/dishesView", params = "viewDishes", method = RequestMethod.GET)
+    public String viewDishes(Model model) {
+        List<Dish> items = dishService.findAll();
+//        model.addAttribute("listaingr",)
+        model.addAttribute("dishes", items);
+        return "/menu";
+    }
 
-        System.out.println(request.getParameter("mySelect2"));
+    //UPDATE DISH
+    @RequestMapping(value = "/menu",params ="update",method = RequestMethod.POST)
+    public String updateDish(@RequestParam long id,@RequestParam String name,@RequestParam float price,@RequestParam String online) {
+
+        boolean ok;
+        if(online.equalsIgnoreCase("yes")) ok=true;
+        else ok=false;
+        System.out.println("aci");
+        dishService.updateDish(id,name,price,ok);
+        return "menu";
+    }
+
+    //DELETE DISH
+    @RequestMapping(value = "/menu", params = "dlt", method = RequestMethod.POST)
+    public String deleteDish(Model model, @RequestParam long id) {
+
+        dishService.deleteDish(id);
+
+//        Notification<Boolean> notification = userService.deleteUser(id);
+//        if (!notification.getResult()) {
+//            model.addAttribute("updUErr", true);
+//            model.addAttribute("delMessage", notification.getFormattedErrors());
+//            return "menu";
+//        }
+//        model.addAttribute("updUSucc", true);
         return "menu";
     }
 //    @RequestMapping(value = "/user", params = "update", method = RequestMethod.POST)
