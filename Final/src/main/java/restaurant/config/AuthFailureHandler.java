@@ -13,11 +13,11 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        String errorMessage="";
-        if(exception.getClass().isAssignableFrom(BadCredentialsException.class)){
-            errorMessage="Invalid username or password.";
-        }else{
-            errorMessage=exception.getMessage();
+        String errorMessage = "";
+        if (exception.getClass().isAssignableFrom(BadCredentialsException.class)) {
+            errorMessage = "Invalid username or password.";
+        } else {
+            errorMessage = exception.getMessage();
         }
         request.getSession().setAttribute("errorMessage", errorMessage);
         response.sendRedirect("/login");

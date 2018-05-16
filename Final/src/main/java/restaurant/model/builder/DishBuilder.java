@@ -33,11 +33,6 @@ public class DishBuilder {
         return this;
     }
 
-    public DishBuilder setOnline(boolean online) {
-        dish.setAvailableOnline(online);
-        return this;
-    }
-
 
     public Dish build() {
         return dish;

@@ -1,7 +1,10 @@
 package restaurant.model.builder;
 
 
+import restaurant.model.Orderr;
 import restaurant.model.User;
+
+import java.util.List;
 
 public class UserBuilder {
 
@@ -28,6 +31,11 @@ public class UserBuilder {
 
     public UserBuilder setRole(String role) {
         user.setRole(role);
+        return this;
+    }
+
+    public UserBuilder setOrderrs(List<Orderr> orderrs) {
+        user.setOrderrs(orderrs);
         return this;
     }
 

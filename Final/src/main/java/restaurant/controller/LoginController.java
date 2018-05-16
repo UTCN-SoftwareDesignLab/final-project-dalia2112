@@ -1,17 +1,18 @@
 package restaurant.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import restaurant.service.ingredient.IngredientService;
 import restaurant.service.user.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.*;
 
 
 @Controller
@@ -35,6 +36,7 @@ public class LoginController {
     public String addNewUser(Model model, @RequestParam String username, @RequestParam String password, @RequestParam String role) {
         System.out.println(username + " " + password + " " + password);
         if (userService.registerUser(username, password, role).hasErrors()) {
+            JOptionPane.showMessageDialog(null, userService.registerUser(username, password, role).getFormattedErrors());
             model.addAttribute("registerErr", true);
             model.addAttribute("errMsg2", userService.registerUser(username, password, role).getFormattedErrors());
         }
@@ -46,10 +48,12 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String showLogin(Model model, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(true);
+
         if (session.getAttribute("errorMessage") != null) {
             model.addAttribute("loginErr", true);
             model.addAttribute("errMsg", (String) session.getAttribute("errorMessage"));
         }
+
         return "login";
     }
 
@@ -61,6 +65,7 @@ public class LoginController {
 //        if (auth != null) {
 //            new SecurityContextLogoutHandler().logout(request, response, auth);
 //        }
+
         return "redirect:/login";
     }
 }

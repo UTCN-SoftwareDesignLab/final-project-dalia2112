@@ -17,7 +17,6 @@ public class Dish {
     )
     private List<Ingredient> ingredients;
     private float price;
-    private boolean availableOnline;
 
     public long getId() {
         return id;
@@ -51,18 +50,11 @@ public class Dish {
         this.price = price;
     }
 
-    public boolean isAvailableOnline() {
-        return availableOnline;
-    }
 
-    public void setAvailableOnline(boolean availableOnline) {
-        this.availableOnline = availableOnline;
-    }
-
-    public String getIngredientList(){
-        String t="";
-        for(Ingredient ingredient:ingredients){
-            t+=ingredient.getName()+" ";
+    public String getIngredientList() {
+        String t = "";
+        for (Ingredient ingredient : ingredients) {
+            t += ingredient.getName() + " ";
         }
         return t;
     }

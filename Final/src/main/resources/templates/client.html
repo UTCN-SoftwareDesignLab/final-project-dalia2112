@@ -13,43 +13,55 @@
             margin-top: 100px;
         }
 
-
     </style>
 
 </head>
 <body>
 <center><h1 style="font-size:60px;">Clients</h1></center>
+<h2><a href="/login">Logout</a><br/></h2>
+<h2><a href="/clientPage">Go back to start page</a><br/></h2>
 <div class="container">
     <!--<form th:action="@{/client}" method="get">-->
-        <!--<input type="submit" class="button" name="reg" value="Add Users"/>-->
+    <!--<input type="submit" class="button" name="reg" value="Add Users"/>-->
     <!--</form>-->
 
-
+    <hr>
+    <h3>Add credit/debit card</h3>
     <form th:action="@{/client}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
         <div class="form-group">
-            <label for="name" class="col-sm-4 control-label">Name:</label>
+            <label for="accnr" class="col-sm-4 control-label">Account number:</label>
             <div class="col-sm-8">
-                <input type="text" name="name" id="name" class="form-control"/>
+                <input type="text" name="accnr" id="accnr" class="form-control"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="money" class="col-sm-4 control-label">Money:</label>
+            <label for="idate" class="col-sm-4 control-label">Issue date:</label>
             <div class="col-sm-8">
-                <input type="number" name="money" id="money" class="form-control"/>
+                <input type="text" name="idate" id="idate" class="form-control"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="orderId" class="col-sm-4 control-label">OrderId:</label>
+            <label for="edate" class="col-sm-4 control-label">Expiry date:</label>
             <div class="col-sm-8">
-                <input type="number" name="orderId" id="orderId" class="form-control"/>
+                <input type="text" name="edate" id="edate" class="form-control"/>
             </div>
         </div>
 
+        <div class="form-group">
+            <label for="sum" class="col-sm-4 control-label">Amount of money:</label>
+            <div class="col-sm-8">
+                <input type="number" name="sum" id="sum" class="form-control"/>
+            </div>
+        </div>
+        <select id="mySelectos" name="mySelectos" value="mySelectos">
+            <option id="credit" value="credit">Credit</option>
+            <option id="debit" value="debit">Debit</option>
+        </select>
 
 
-        <input type="submit" class="button" name="addClient" value="Add client"/>
+        <input type="submit" class="button" name="addCard" value="Add card to client"/>
 
 
         <!-- ALERTS -->
@@ -59,35 +71,34 @@
     </form>
 
 
-    <form th:action="@{/clientView}" method="get">
-        <input type="submit" class="button" name="viewUsers" value="View Users"/>
+    <form th:action="@{/cardView}" method="get">
+        <input type="submit" class="button" name="viewCards" value="View Cards"/>
     </form>
 
-    <form th:action="@{/logout}" method="get">
-        <input type="submit" class="button" name="logout" value="Logout"/>
-    </form>
+    <!--<form th:action="@{/logout}" method="get">-->
+    <!--<input type="submit" class="button" name="logout" value="Logout"/>-->
+    <!--</form>-->
 </div>
-
-<div th:if="${param.success}">
-    Author created successfully!
-</div>
-
 
 <table border="1">
     <thead>
     <tr>
         <th>Id</th>
-        <th>Name</th>
-        <th>Money</th>
-        //<th>OrderId</th>
+        <th>Account Number</th>
+        <th>Issue date</th>
+        <th>Expiry date</th>
+        <th>Sum</th>
+        <th>Credit card</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="client : ${clients}">
-        <td th:text="${client.id}"></td>
-        <td th:text="${client.name}"></td>
-        <td th:text="${client.money}"></td>
-        <!--<td th:text="${client.order.id}"></td>-->
+    <tr th:each="card : ${cards}">
+        <td th:text="${card.id}"></td>
+        <td th:text="${card.accountNumber}"></td>
+        <td th:text="${card.issueDate}"></td>
+        <td th:text="${card.expiryDate}"></td>
+        <td th:text="${card.sum}"></td>
+        <td th:text="${card.credit}"></td>
     </tr>
     </tbody>
 </table>

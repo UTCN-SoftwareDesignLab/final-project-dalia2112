@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class UserValidator {
     private static final String EMAIL_VALIDATION_REGEX = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     private static final int MIN_PASSWORD_LENGTH = 8;
-    private List<String> ROLES = Arrays.asList("admin", "secretary","doctor");
+    private List<String> ROLES = Arrays.asList("admin", "employee", "client");
 
     private final User user;
 
@@ -60,8 +60,8 @@ public class UserValidator {
         }
     }
 
-    private void validateRole(String role){
-        if(!ROLES.contains(role))
+    private void validateRole(String role) {
+        if (!ROLES.contains(role))
             errors.add("Invalid Role!");
     }
 
@@ -89,12 +89,12 @@ public class UserValidator {
 
         validateUsername(username);
         validatePassword(password);
-        if(!ROLES.contains(role))
+        if (!ROLES.contains(role))
             errors.add("Invalid role!");
 
         return errors.isEmpty();
 
-}
+    }
 
     public String getFormattedErrors() {
         String result = "";

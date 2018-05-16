@@ -71,6 +71,7 @@ public class UserServiceImpl implements UserService {
             userValidator.getErrors().forEach(userRegisterNotification::addError);
             userRegisterNotification.setResult(Boolean.FALSE);
         } else {
+
             user.setPassword(passEncoder.encode(password));
             userRegisterNotification.setResult(true);
             userRepository.save(user);

@@ -19,7 +19,7 @@ public class Orderr {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
-    private Client client;
+    private User client;
 
     private float receit;
     private boolean online;
@@ -32,11 +32,11 @@ public class Orderr {
         this.dishes = dishes;
     }
 
-    public Client getClient() {
+    public User getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
+    public void setClient(User client) {
         this.client = client;
     }
 

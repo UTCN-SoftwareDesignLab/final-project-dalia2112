@@ -15,14 +15,13 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
-    {
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .jdbcAuthentication()
                 .dataSource(dataSource)
@@ -31,17 +30,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .rolePrefix("ROLE_")
                 .passwordEncoder(new BCryptPasswordEncoder());
     }
+
     @Override
-    public void configure(HttpSecurity httpSecurity) throws Exception
-    {
+    public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/login","/register").permitAll()
-                .antMatchers("/user/**").hasRole("admin")
-                .antMatchers("/doctorOp/**").hasRole("doctor")
-                .antMatchers("/secretaryOp/**").hasRole("secretary")
+                .antMatchers("/login", "/register").permitAll()
+                .antMatchers("/adminPage/**", "/user/**", "/menu/**").hasRole("admin")
+                .antMatchers("/employeePage/**", "/delivery/**").hasRole("employee")
+                .antMatchers("/client/**", "/orders/**").hasRole("client")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -53,20 +52,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .logout()
                 .permitAll();
     }
+
     @Override
-    public void configure(WebSecurity webSecurity) throws Exception
-    {
+    public void configure(WebSecurity webSecurity) throws Exception {
         webSecurity
                 .ignoring()
                 .antMatchers("/resources/**");
     }
-    private AuthenticationSuccessHandler getAuthenticationSuccessHandler()
-    {
+
+    private AuthenticationSuccessHandler getAuthenticationSuccessHandler() {
         return new AuthSuccessHandler();
     }
 
-    private AuthenticationFailureHandler getAuthenticationFailureHandler()
-    {
+    private AuthenticationFailureHandler getAuthenticationFailureHandler() {
         return new AuthFailureHandler();
     }
 }

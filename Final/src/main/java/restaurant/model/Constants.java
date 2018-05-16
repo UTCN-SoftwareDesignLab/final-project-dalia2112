@@ -31,14 +31,14 @@ public class Constants {
 
 
         public static final String[] VEGAN = new String[]{BREAD, FLOUR, SALT,
-                 HONEY,SUGAR,POTATO,PEPPER,CHILLY,ONION,GARLIC,SALAD,TOMATOE,COCOA,VANILLA,FRUITS,DOUGH};
+                HONEY, SUGAR, POTATO, PEPPER, CHILLY, ONION, GARLIC, SALAD, TOMATOE, COCOA, VANILLA, FRUITS, DOUGH};
 
-        public static final String[] NONVEGAN=new String[]{MILK,CHEESE,HAM,CHICKEN,BEAF,
+        public static final String[] NONVEGAN = new String[]{MILK, CHEESE, HAM, CHICKEN, BEAF,
                 PORK};
 
-        public static final String[] ALL=new String[]{BREAD, FLOUR, SALT,
-                HONEY,SUGAR,POTATO,PEPPER,CHILLY,ONION,GARLIC,SALAD,TOMATOE,COCOA,VANILLA,FRUITS,DOUGH,
-                MILK,CHEESE,HAM,CHICKEN,BEAF,
+        public static final String[] ALL = new String[]{BREAD, FLOUR, SALT,
+                HONEY, SUGAR, POTATO, PEPPER, CHILLY, ONION, GARLIC, SALAD, TOMATOE, COCOA, VANILLA, FRUITS, DOUGH,
+                MILK, CHEESE, HAM, CHICKEN, BEAF,
                 PORK
         };
     }

@@ -14,6 +14,9 @@
 
 
 
+
+
+
     </style>
 </head>
 
@@ -28,7 +31,6 @@
         <th>Name</th>
         <th>Ingredients</th>
         <th>Price</th>
-        <th>Online</th>
     </tr>
     </thead>
     <tbody>
@@ -37,7 +39,6 @@
         <td th:text="${dish.name}"></td>
         <td th:text="${dish.getIngredientList()}"></td>
         <td th:text="${dish.price}"></td>
-        <td th:text="${dish.availableOnline}"></td>
     </tr>
     </tbody>
 </table>
@@ -47,7 +48,6 @@
 
 
     <form th:action="@{/menu}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
-
 
 
         <div class="form-group">
@@ -61,13 +61,6 @@
             <label for="price" class="col-sm-4 control-label">Price:</label>
             <div class="col-sm-8">
                 <input type="number" name="price" id="price" class="form-control"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="online" class="col-sm-4 control-label">Available Online:</label>
-            <div class="col-sm-8">
-                <input type="text" name="online" id="online" class="form-control"/>
             </div>
         </div>
 
@@ -85,18 +78,19 @@
                     z[i].appendChild(t[i]);
                     document.getElementById("mySelect2").appendChild(z[i]);
                 }
-
             }
+
             </script>
         </select>
+
 
         <input type="submit" class="button" name="ps" value="Add ingredient to dish"/>
 
         <div class="form-group">
-        <label for="id" class="col-sm-4 control-label">ID for update/delete</label>
-        <div class="col-sm-8">
-        <input type="number" name="id" id="id" class="form-control"/>
-        </div>
+            <label for="id" class="col-sm-4 control-label">ID for update/delete</label>
+            <div class="col-sm-8">
+                <input type="number" name="id" id="id" class="form-control"/>
+            </div>
         </div>
 
         <input type="submit" class="button" name="update" value="Update Dish"/>

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import restaurant.model.Dish;
 import restaurant.model.Ingredient;
 import restaurant.model.builder.DishBuilder;
+import restaurant.model.validation.Notification;
 import restaurant.repository.DishRepository;
 
 import java.util.ArrayList;
@@ -21,13 +22,11 @@ public class DishServiceImpl implements DishService {
         return dishRepository.findAll();
     }
 
-    //    @Override
-//    public Dish findByName(String name){
-//        return dishRepository.findByName(name);
-//    }
     @Override
-    public void addDish(String name, Ingredient ingredient, float price, boolean availableOnline) {
+    public Notification<Boolean> addDish(String name, Ingredient ingredient, float price) {
 
+        Notification<Boolean> notification = new Notification<>();
+//        DishValidator
         Dish dish = dishRepository.findByName(name);
         List<Ingredient> ingredients;
         if (dish == null) {
@@ -38,7 +37,6 @@ public class DishServiceImpl implements DishService {
                     .setName(name)
                     .setIngredients(ingredients)
                     .setMoney(price)
-                    .setOnline(availableOnline)
                     .build();
             dishRepository.save(dish1);
         } else {
@@ -48,20 +46,24 @@ public class DishServiceImpl implements DishService {
             System.out.println("NU era null " + ingredients.get(0).getName());
             dishRepository.save(dish);
         }
+        return notification;
 
     }
 
-    public void updateDish(long id,String name,float price,boolean online){
-        Dish dish=dishRepository.findById(id);
-        if(dish!=null){
+    public Notification<Boolean> updateDish(long id, String name, float price) {
+        Dish dish = dishRepository.findById(id);
+        Notification<Boolean> notification = new Notification<>();
+        if (dish != null) {
             dish.setName(name);
             dish.setPrice(price);
-            dish.setAvailableOnline(online);
             dishRepository.save(dish);
         }
+        return notification;
     }
 
-    public void deleteDish(long id){
+    public Notification<Boolean> deleteDish(long id) {
+        Notification<Boolean> notification = new Notification<>();
         dishRepository.deleteById(id);
+        return notification;
     }
 }

@@ -2,9 +2,9 @@ package restaurant.service.orderr;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import restaurant.model.Client;
 import restaurant.model.Dish;
 import restaurant.model.Orderr;
+import restaurant.model.User;
 import restaurant.model.builder.OrderrBuilder;
 import restaurant.repository.OrderrRepository;
 
@@ -22,8 +22,8 @@ public class OrderrServiceImpl implements OrderrService {
     }
 
     @Override
-    public void addOrderr(List<Dish> dishes, Client client, float receit, boolean online) {
-        Orderr orderr=new OrderrBuilder()
+    public void addOrderr(List<Dish> dishes, User client, float receit, boolean online) {
+        Orderr orderr = new OrderrBuilder()
                 .setDishes(dishes)
                 .setClient(client)
                 .setReceit(receit)

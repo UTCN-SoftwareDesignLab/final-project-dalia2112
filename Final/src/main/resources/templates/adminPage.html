@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"
+
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <style>
+        #mySidenav a {
+        position: absolute;
+        left: -80px;
+        transition: 0.3s;
+        padding: 15px;
+        width: 100px;
+        text-decoration: none;
+        font-size: 20px;
+        color: white;
+        border-radius: 0 5px 5px 0;
+        }
+
+        #mySidenav a:hover {
+            left: 0;
+        }
+
+        #about {
+            top: 100px;
+            background-color: #4CAF50;
+        }
+
+        #blog {
+            top: 160px;
+            background-color: #2196F3;
+        }
+
+        #projects {
+            top: 140px;
+            background-color: #f44336;
+        }
+
+        #contact {
+            top: 200px;
+            background-color: #555
+        }
+
+
+    </style>
+</head>
+<body>
+<center><font size="50">Admin Menu</font></center>
+
+<div class="container">
+
+    <form th:action="@{/adminPage}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+
+        <p>
+        <div id="mySidenav" class="sidenav">
+            <a href="/user" id="about">Users</a>
+            <a href="/menu" id="blog">Menu</a>
+            <!--<a href="#" id="projects">Projects</a>-->
+            <!--<a href="#" id="contact">Contact</a>-->
+        </div>
+        </p>
+    </form>
+</div>
+</body>
+</html>

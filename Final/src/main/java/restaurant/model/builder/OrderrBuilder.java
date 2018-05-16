@@ -1,9 +1,9 @@
 package restaurant.model.builder;
 
 
-import restaurant.model.Client;
 import restaurant.model.Dish;
 import restaurant.model.Orderr;
+import restaurant.model.User;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class OrderrBuilder {
         return this;
     }
 
-    public OrderrBuilder setClient(Client client) {
+    public OrderrBuilder setClient(User client) {
         orderr.setClient(client);
         return this;
     }

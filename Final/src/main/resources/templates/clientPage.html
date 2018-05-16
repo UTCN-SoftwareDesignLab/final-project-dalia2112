@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Client</title>
+    <style>
+        #mySidenav a {
+        position: absolute;
+        left: -80px;
+        transition: 0.3s;
+        padding: 15px;
+        width: 100px;
+        text-decoration: none;
+        font-size: 20px;
+        color: white;
+        border-radius: 0 5px 5px 0;
+        }
+
+        #mySidenav a:hover {
+            left: 0;
+        }
+
+        #about {
+            top: 100px;
+            background-color: #4CAF50;
+        }
+
+        #blog {
+            top: 160px;
+            background-color: #2196F3;
+        }
+
+        #projects {
+            top: 220px;
+            background-color: #f44336;
+        }
+
+        #contact {
+            top: 280px;
+            background-color: #555
+        }
+
+
+    </style>
+</head>
+<body>
+<center><font size="50">Employee Menu</font></center>
+
+<div class="container">
+
+    <form th:action="@{/employeePage}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+
+        <p>
+        <div id="mySidenav" class="sidenav">
+            <a href="/client" id="about">Cards</a>
+            <a href="/orders" id="blog">Orders</a>
+            <a href="/delivery" id="projects">Delivery</a>
+        </div>
+        </p>
+    </form>
+</div>
+</body>
+</html>

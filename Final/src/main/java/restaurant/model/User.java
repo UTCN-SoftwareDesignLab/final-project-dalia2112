@@ -1,9 +1,7 @@
 package restaurant.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
@@ -13,6 +11,13 @@ public class User {
     private String name;
     private String password;
     private String role;
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "employee_orderrs",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "orderr_id", referencedColumnName = "id")
+    )
+    private List<Orderr> orderrs;
 
 
     public long getId() {
@@ -45,5 +50,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public List<Orderr> getOrderrs() {
+        return orderrs;
+    }
+
+    public void setOrderrs(List<Orderr> orderrs) {
+        this.orderrs = orderrs;
     }
 }

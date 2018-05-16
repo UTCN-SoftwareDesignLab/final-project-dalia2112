@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders</title>
+
+    <style>
+       * {
+    box-sizing: border-box;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 33.33%;
+    padding: 10px;
+    height: 300px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+
+
+
+
+    </style>
+
+</head>
+<body>
+<center><font size="50">What do you wish to order?</font></center>
+<div class="container">
+    <form th:action="@{/orders}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+        <div class="row">
+            <div class="column" style="background-color:#aaa;">
+                <h2>Our menu</h2>
+                <table border="1">
+                    <thead>
+                    <tr>
+                        <td><input type="checkbox" id="chckHead"/></td>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Ingredients</th>
+                        <th>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="dish : ${dishes}">
+                        <td><input type="checkbox" class="chcktbl"/></td>
+                        <td th:text="${dish.id}"></td>
+                        <td th:text="${dish.name}"></td>
+                        <td th:text="${dish.getIngredientList()}"></td>
+                        <td th:text="${dish.price}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <script type="text/javascript">
+            $('#chckHead').click(function () {
+                if (this.checked == false) {
+                    $('.chcktbl:checked').attr('checked', false);
+                }
+                else {
+                    $('.chcktbl:not(:checked)').attr('checked', true);
+                }
+            });
+            $('#chckHead').click(function () {
+            });
+
+
+
+                </script>
+
+                <script type="text/javascript">
+            $('.chcktbl').click(function () {
+                console.log("checked");
+                var length = $('.chcktbl:checked').length;
+                if (length > 3) {
+                    alert(length);
+                    $('.chcktbl:not(:checked)').attr('disabled', true);
+                }
+                else {
+                    $('.chcktbl:not(:checked)').attr('disabled', false);
+                }
+            });
+
+
+
+                </script>
+
+            </div>
+            <div class="column" style="background-color:#bbb;">
+                <h2>Your shoping cart</h2>
+            </div>
+        </div>
+    </form>
+
+    <form th:action="@{/dishView}" method="get">
+        <input type="submit" class="button" name="viewDishes" value="View Dishes"/>
+    </form>
+
+</div>
+</body>
+</html>
