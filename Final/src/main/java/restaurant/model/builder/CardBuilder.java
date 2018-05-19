@@ -23,13 +23,28 @@ public class CardBuilder {
         return this;
     }
 
-    public CardBuilder setIssueDate(LocalDate date) {
-        card.setIssueDate(date);
+//    public CardBuilder setIssueDate(LocalDate date) {
+//        card.setIssueDate(date);
+//        return this;
+//    }
+//
+//    public CardBuilder setExpiryDate(LocalDate date) {
+//        card.setExpiryDate(date);
+//        return this;
+//    }
+
+    public CardBuilder setExpMonth(int month){
+        card.setExpMonth(month);
         return this;
     }
 
-    public CardBuilder setExpiryDate(LocalDate date) {
-        card.setExpiryDate(date);
+    public CardBuilder setExpYear(int year){
+        card.setExpYear(year);
+        return this;
+    }
+
+    public CardBuilder setCVV(int cvv){
+        card.setcVV(cvv);
         return this;
     }
 

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> findByClientName(String name);
+    Card findById(long id);
+    Card findByAccountNumber(String accnr);
 }

@@ -12,5 +12,10 @@ import java.util.List;
 public interface CardService {
     List<Card> findByClientName(String name);
 
-    Notification<Boolean> addCard(String accNr, LocalDate idate, LocalDate edate, float sum, boolean credit, User client);
+    Card findById(long id);
+
+    Notification<Boolean> addCard(String accNr, int month,int year, float sum,int cvv, boolean credit, User client);
+
+    Notification<Boolean> checkandPay(User user,String credCardNr,int expMonth,int expYear,int cvv,float sumToPay);
+
 }

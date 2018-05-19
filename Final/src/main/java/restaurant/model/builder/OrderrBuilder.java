@@ -5,7 +5,7 @@ import restaurant.model.Dish;
 import restaurant.model.Orderr;
 import restaurant.model.User;
 
-import java.util.List;
+import java.util.Map;
 
 public class OrderrBuilder {
     private Orderr orderr;
@@ -19,7 +19,7 @@ public class OrderrBuilder {
         return this;
     }
 
-    public OrderrBuilder setDishes(List<Dish> dishes) {
+    public OrderrBuilder setDishes(Map<Dish, Integer> dishes) {
         orderr.setDishes(dishes);
         return this;
     }
@@ -34,8 +34,23 @@ public class OrderrBuilder {
         return this;
     }
 
-    public OrderrBuilder setOnline(boolean online) {
-        orderr.setOnline(online);
+    public OrderrBuilder setAddress(String address) {
+        orderr.setAddress(address);
+        return this;
+    }
+
+    public OrderrBuilder setCity(String city) {
+        orderr.setCity(city);
+        return this;
+    }
+
+    public OrderrBuilder setState(String state) {
+        orderr.setState(state);
+        return this;
+    }
+
+    public OrderrBuilder setZip(int zip) {
+        orderr.setZip(zip);
         return this;
     }
 

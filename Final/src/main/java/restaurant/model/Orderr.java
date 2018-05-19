@@ -1,7 +1,7 @@
 package restaurant.model;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Orderr {
@@ -9,26 +9,25 @@ public class Orderr {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "orderr_dishes",
-            joinColumns = @JoinColumn(name = "orderr_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "dish_id", referencedColumnName = "id")
-    )
-    private List<Dish> dishes;
+    @ElementCollection
+    Map<Dish, Integer> dishes;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
 
     private float receit;
-    private boolean online;
+    private String address;
+    private String city;
+    private String state;
+    private int zip;
 
-    public List<Dish> getDishes() {
+
+    public Map<Dish, Integer> getDishes() {
         return dishes;
     }
 
-    public void setDishes(List<Dish> dishes) {
+    public void setDishes(Map<Dish, Integer> dishes) {
         this.dishes = dishes;
     }
 
@@ -48,13 +47,6 @@ public class Orderr {
         this.id = id;
     }
 
-//    public List<Dish> getDishes() {
-//        return dishes;
-//    }
-//
-//    public void setDishes(List<Dish> dishes) {
-//        this.dishes = dishes;
-//    }
 
     public float getReceit() {
         return receit;
@@ -64,11 +56,36 @@ public class Orderr {
         this.receit = receit;
     }
 
-    public boolean isOnline() {
-        return online;
+
+    public String getAddress() {
+        return address;
     }
 
-    public void setOnline(boolean online) {
-        this.online = online;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public int getZip() {
+        return zip;
+    }
+
+    public void setZip(int zip) {
+        this.zip = zip;
     }
 }

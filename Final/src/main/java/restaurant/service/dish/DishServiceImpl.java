@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import restaurant.model.Dish;
 import restaurant.model.Ingredient;
 import restaurant.model.builder.DishBuilder;
+import restaurant.model.validation.DishValidator;
 import restaurant.model.validation.Notification;
 import restaurant.repository.DishRepository;
 
@@ -23,6 +24,11 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    public Dish findById(long id){
+        return dishRepository.findById(id);
+    }
+
+    @Override
     public Notification<Boolean> addDish(String name, Ingredient ingredient, float price) {
 
         Notification<Boolean> notification = new Notification<>();
@@ -38,13 +44,21 @@ public class DishServiceImpl implements DishService {
                     .setIngredients(ingredients)
                     .setMoney(price)
                     .build();
-            dishRepository.save(dish1);
+            DishValidator validator = new DishValidator(dish1);
+            if (!validator.validate()) {
+                validator.getErrors().forEach(notification::addError);
+                notification.setResult(false);
+            } else {
+                dishRepository.save(dish1);
+                notification.setResult(true);
+            }
         } else {
             ingredients = dish.getIngredients();
             ingredients.add(ingredient);
             dish.setIngredients(ingredients);
             System.out.println("NU era null " + ingredients.get(0).getName());
             dishRepository.save(dish);
+            notification.setResult(true);
         }
         return notification;
 
@@ -56,14 +70,24 @@ public class DishServiceImpl implements DishService {
         if (dish != null) {
             dish.setName(name);
             dish.setPrice(price);
+            notification.setResult(true);
             dishRepository.save(dish);
+        } else {
+            notification.addError("Dish does not exist!");
+            notification.setResult(false);
         }
         return notification;
     }
 
     public Notification<Boolean> deleteDish(long id) {
         Notification<Boolean> notification = new Notification<>();
-        dishRepository.deleteById(id);
+        if (dishRepository.findById(id) == null) {
+            notification.addError("Dish does not exist!");
+            notification.setResult(false);
+        } else {
+            notification.setResult(true);
+            dishRepository.deleteById(id);
+        }
         return notification;
     }
 }

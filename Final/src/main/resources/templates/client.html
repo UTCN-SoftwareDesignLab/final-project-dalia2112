@@ -21,38 +21,42 @@
 <h2><a href="/login">Logout</a><br/></h2>
 <h2><a href="/clientPage">Go back to start page</a><br/></h2>
 <div class="container">
-    <!--<form th:action="@{/client}" method="get">-->
-    <!--<input type="submit" class="button" name="reg" value="Add Users"/>-->
-    <!--</form>-->
 
     <hr>
     <h3>Add credit/debit card</h3>
     <form th:action="@{/client}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
         <div class="form-group">
-            <label for="accnr" class="col-sm-4 control-label">Account number:</label>
+            <label for="accnr" class="col-sm-4 control-label">Card number:</label>
             <div class="col-sm-8">
-                <input type="text" name="accnr" id="accnr" class="form-control"/>
+                <input type="text" name="accnr" id="accnr" class="form-control"  placeholder="123-456-789"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="idate" class="col-sm-4 control-label">Issue date:</label>
+            <label for="cvv" class="col-sm-4 control-label">CVV:</label>
             <div class="col-sm-8">
-                <input type="text" name="idate" id="idate" class="form-control"/>
+                <input type="number" name="cvv" id="cvv" class="form-control" placeholder="833"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="edate" class="col-sm-4 control-label">Expiry date:</label>
+            <label for="month" class="col-sm-4 control-label">Expiry month:</label>
             <div class="col-sm-8">
-                <input type="text" name="edate" id="edate" class="form-control"/>
+                <input type="text" name="month" id="month" class="form-control" placeholder="05"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="year" class="col-sm-4 control-label">Expiry year:</label>
+            <div class="col-sm-8">
+                <input type="text" name="year" id="year" class="form-control" placeholder="2019"/>
             </div>
         </div>
 
         <div class="form-group">
             <label for="sum" class="col-sm-4 control-label">Amount of money:</label>
             <div class="col-sm-8">
-                <input type="number" name="sum" id="sum" class="form-control"/>
+                <input type="number" name="sum" id="sum" class="form-control" placeholder="1500"/>
             </div>
         </div>
         <select id="mySelectos" name="mySelectos" value="mySelectos">
@@ -85,8 +89,9 @@
     <tr>
         <th>Id</th>
         <th>Account Number</th>
-        <th>Issue date</th>
-        <th>Expiry date</th>
+        <th>CVV</th>
+        <th>Expiry month</th>
+        <th>Expiry year</th>
         <th>Sum</th>
         <th>Credit card</th>
     </tr>
@@ -95,14 +100,14 @@
     <tr th:each="card : ${cards}">
         <td th:text="${card.id}"></td>
         <td th:text="${card.accountNumber}"></td>
-        <td th:text="${card.issueDate}"></td>
-        <td th:text="${card.expiryDate}"></td>
+        <td th:text="${card.cVV}"></td>
+        <td th:text="${card.expMonth}"></td>
+        <td th:text="${card.expYear}"></td>
         <td th:text="${card.sum}"></td>
         <td th:text="${card.credit}"></td>
     </tr>
     </tbody>
 </table>
-
 
 </body>
 </html>

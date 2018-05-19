@@ -9,8 +9,12 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private float sum;
-    private LocalDate issueDate;
-    private LocalDate expiryDate;
+    private int expMonth;
+    private int expYear;
+    private int cVV;  //nr de pe spatele cardului
+
+//    private LocalDate issueDate;
+//    private LocalDate expiryDate;
     private String accountNumber;
     @OneToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
@@ -34,21 +38,21 @@ public class Card {
         this.sum = sum;
     }
 
-    public LocalDate getIssueDate() {
-        return issueDate;
-    }
-
-    public void setIssueDate(LocalDate issueDate) {
-        this.issueDate = issueDate;
-    }
-
-    public LocalDate getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(LocalDate expiryDate) {
-        this.expiryDate = expiryDate;
-    }
+//    public LocalDate getIssueDate() {
+//        return issueDate;
+//    }
+//
+//    public void setIssueDate(LocalDate issueDate) {
+//        this.issueDate = issueDate;
+//    }
+//
+//    public LocalDate getExpiryDate() {
+//        return expiryDate;
+//    }
+//
+//    public void setExpiryDate(LocalDate expiryDate) {
+//        this.expiryDate = expiryDate;
+//    }
 
     public String getAccountNumber() {
         return accountNumber;
@@ -72,5 +76,29 @@ public class Card {
 
     public void setCredit(boolean credit) {
         this.credit = credit;
+    }
+
+    public int getExpMonth() {
+        return expMonth;
+    }
+
+    public void setExpMonth(int expMonth) {
+        this.expMonth = expMonth;
+    }
+
+    public int getExpYear() {
+        return expYear;
+    }
+
+    public void setExpYear(int expYear) {
+        this.expYear = expYear;
+    }
+
+    public int getcVV() {
+        return cVV;
+    }
+
+    public void setcVV(int cVV) {
+        this.cVV = cVV;
     }
 }

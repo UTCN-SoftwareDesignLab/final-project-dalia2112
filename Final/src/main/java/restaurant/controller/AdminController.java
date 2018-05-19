@@ -75,11 +75,12 @@ public class AdminController {
 
         Notification<Boolean> notification = userService.deleteUser(id);
         if (!notification.getResult()) {
-            model.addAttribute("delUErr", true);
-            model.addAttribute("delMessage", notification.getFormattedErrors());
+            model.addAttribute("updUErr", true);
+            model.addAttribute("updMessage", notification.getFormattedErrors());
             return "user";
         }
-        model.addAttribute("delSucc", true);
+        model.addAttribute("updUSucc", true);
+        model.addAttribute("updMessage2", "User deleted successfully!");
         return "user";
     }
 
@@ -156,5 +157,7 @@ public class AdminController {
         model.addAttribute("updMessage2","Dish deleted successfully!");
         return "menu";
     }
+
+
 
 }

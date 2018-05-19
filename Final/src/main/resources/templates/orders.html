@@ -5,7 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Orders</title>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
        * {
     box-sizing: border-box;
@@ -14,9 +17,9 @@
 /* Create three equal columns that floats next to each other */
 .column {
     float: left;
-    width: 33.33%;
+    width: 50.00%;
     padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
+    height: 650px; /* Should be removed. Only for demonstration */
 }
 
 /* Clear floats after the columns */
@@ -26,7 +29,144 @@
     clear: both;
 }
 
+body {font-family: Arial, Helvetica, sans-serif;}
 
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
+}
+
+.container {
+  background-color: #f2f2f2;
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+input[type=text] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 30%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+span.price {
+  float: right;
+  color: grey;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 800px) {
+  .row {
+    flex-direction: column-reverse;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
 
 
 
@@ -36,75 +176,148 @@
 </head>
 <body>
 <center><font size="50">What do you wish to order?</font></center>
+<h2><a href="/login">Logout</a><br/></h2>
+<h2><a href="/clientPage">Go back to start page</a><br/></h2>
 <div class="container">
     <form th:action="@{/orders}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
         <div class="row">
-            <div class="column" style="background-color:#aaa;">
+            <div class="col-25" style="background-color:#aaa;">
                 <h2>Our menu</h2>
-                <table border="1">
+                <hr>
+                <!--<select class="form-control" id="msl">-->
+                <!--<option th:each="vl : ${lst}" th:text="${vl}"></option>-->
+                <!--</select>-->
+
+                <table id="myTable" border="1">
                     <thead>
                     <tr>
-                        <td><input type="checkbox" id="chckHead"/></td>
+                        <th>Checked</th>
                         <th>Id</th>
                         <th>Name</th>
                         <th>Ingredients</th>
                         <th>Price</th>
+                        <th>Quantity</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="dish : ${dishes}">
-                        <td><input type="checkbox" class="chcktbl"/></td>
+                        <td><input type="checkbox" class="chcktbl " id="cbx" name="cbx" th:value="${dish.id}"
+                                   onclick="checkAll(this)"></td>
                         <td th:text="${dish.id}"></td>
                         <td th:text="${dish.name}"></td>
                         <td th:text="${dish.getIngredientList()}"></td>
                         <td th:text="${dish.price}"></td>
+                        <td><input type="number" th:name="${dish.id}" th:id="${dish.id}" class="form-control"/></td>
                     </tr>
                     </tbody>
                 </table>
 
-                <script type="text/javascript">
-            $('#chckHead').click(function () {
-                if (this.checked == false) {
-                    $('.chcktbl:checked').attr('checked', false);
+
+                <script>
+                  function checkAll(bx) {
+                        var checkedValue = null;
+                        var inputElements = document.getElementsByClassName('chcktbl');
+                        for(var i=0; inputElements[i]; ++i){
+                            if(inputElements[i].checked){
+                               checkedValue = inputElements[i].value;
+                               console.log(checkedValue);
+                               break;
+                            }
+                        }
                 }
-                else {
-                    $('.chcktbl:not(:checked)').attr('checked', true);
-                }
-            });
-            $('#chckHead').click(function () {
-            });
+
 
 
 
                 </script>
+                <p></p>
+                <input type="submit" class="btn" name="cbb" value="Add dishes to your cart"/>
 
-                <script type="text/javascript">
-            $('.chcktbl').click(function () {
-                console.log("checked");
-                var length = $('.chcktbl:checked').length;
-                if (length > 3) {
-                    alert(length);
-                    $('.chcktbl:not(:checked)').attr('disabled', true);
-                }
-                else {
-                    $('.chcktbl:not(:checked)').attr('disabled', false);
-                }
-            });
-
-
-
-                </script>
 
             </div>
-            <div class="column" style="background-color:#bbb;">
-                <h2>Your shoping cart</h2>
+            <div class="col-50" style="background-color:#bbb;">
+                <div class="row">
+                    <div class="col-50">
+                        <div class="container">
+                            <form action="/action_page.php">
+
+                                <div class="row">
+                                    <div class="col-50">
+                                        <h3>Billing Address</h3>
+                                        <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                                        <input type="text" id="fname" name="firstname" placeholder="John M. Doe">
+                                        <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                                        <input type="text" id="email" name="email" placeholder="john@example.com">
+                                        <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
+                                        <input type="text" id="adr" name="adr" placeholder="542 W. 15th Street">
+                                        <label for="city"><i class="fa fa-institution"></i> City</label>
+                                        <input type="text" id="city" name="city" placeholder="New York">
+
+                                        <div class="row">
+                                            <div class="col-50">
+                                                <label for="state">State</label>
+                                                <input type="text" id="state" name="state" placeholder="NY">
+                                            </div>
+                                            <div class="col-50">
+                                                <label for="zip">Zip</label>
+                                                <input type="number" id="zip" name="zip" placeholder="436">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-50">
+                                        <h3>Payment</h3>
+                                        <label for="fname">Accepted Cards</label>
+                                        <div class="icon-container">
+                                            <i class="fa fa-cc-visa" style="color:navy;"></i>
+                                            <i class="fa fa-cc-amex" style="color:blue;"></i>
+                                            <i class="fa fa-cc-mastercard" style="color:red;"></i>
+                                            <i class="fa fa-cc-discover" style="color:orange;"></i>
+                                        </div>
+                                        <!--<label for="cname">Name on Card</label>-->
+                                        <!--<input type="text" id="cname" name="cardname" placeholder="John More Doe">-->
+                                        <label for="ccnum">Credit card number</label>
+                                        <input type="text" id="ccnum" name="ccnum" placeholder="123-456-789">
+                                        <label for="expmonth">Exp Month</label>
+                                        <input type="number" id="expmonth" name="expmonth" placeholder="05">
+                                        <div class="row">
+                                            <div class="col-50">
+                                                <label for="expyear">Exp Year</label>
+                                                <input type="number" id="expyear" name="expyear" placeholder="2018">
+                                            </div>
+                                            <div class="col-50">
+                                                <label for="cvv">CVV</label>
+                                                <input type="number" id="cvv" name="cvv" placeholder="352">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <input type="submit" id="chk" name="chk" value="Pay Order" class="btn">
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-25">
+                        <div class="container">
+                            <h4>Cart <span class="price" style="color:black"><i
+                                    class="fa fa-shopping-cart"></i> <b> <span th:text="${nrProd}"></span> </b></span>
+                            </h4>
+                            <p th:each="prod : ${prodlst}" th:text="${prod}"></p>
+                            <hr>
+                            <p>Total <b><span th:text="${totalPrice}"></span></b></p>
+                        </div>
+                    </div>
+                </div>
+
+                <p></p>
+
             </div>
+
         </div>
+        <div th:if="${fail}" class="alert alert-danger" role="alert" th:text="${failMessage}"></div>
+        <div th:if="${succ}" class="alert alert-success" role="alert" th:text="${succMessage}"></div>
     </form>
 
-    <form th:action="@{/dishView}" method="get">
-        <input type="submit" class="button" name="viewDishes" value="View Dishes"/>
-    </form>
 
 </div>
 </body>

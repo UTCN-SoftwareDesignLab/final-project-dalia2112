@@ -5,10 +5,12 @@ import restaurant.model.Card;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class CardValidator {
 
-    private final int CARD_NR_LENGTH = 5;
+    private final int CCV_LENGTH = 5;
+    private final String ACC_NR_REGEX = "[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9]$";
     private final Card card;
     private List<String> errors;
 
@@ -19,8 +21,8 @@ public class CardValidator {
 
     public boolean validate() {
         validateMoney(card.getSum());
-        validateCardNr(card.getAccountNumber());
-        validateDates(card.getIssueDate(), card.getExpiryDate());
+        validateDate(card.getExpMonth(), card.getExpYear());
+        validateAccNr(card.getAccountNumber());
         return errors.isEmpty();
     }
 
@@ -28,20 +30,22 @@ public class CardValidator {
         return errors;
     }
 
+    private void validateAccNr(String accnr) {
+        if (!Pattern.compile(ACC_NR_REGEX).matcher(accnr).matches()) {
+            errors.add("Invalid card number!");
+        }
+    }
+
     private void validateMoney(float money) {
         if (money < 0.0)
             errors.add("Not enough money!");
     }
 
-    private void validateCardNr(String nr) {
-        if (nr.length() != 5)
-            errors.add("Invalid account number!");
-    }
-
-    private void validateDates(LocalDate d1, LocalDate d2) {
-        if (d1.isAfter(LocalDate.now()))
-            errors.add("Invalid issue date!");
-        if (d2.isBefore(LocalDate.now()))
-            errors.add("Invalid exipiry date!");
+    private void validateDate(int month, int year) {
+        if (year < LocalDate.now().getYear())
+            errors.add("Invalid expiry date!");
+        else if (year == LocalDate.now().getYear())
+            if (month < LocalDate.now().getMonth().getValue())
+                errors.add("Invalid exipiry date!");
     }
 }

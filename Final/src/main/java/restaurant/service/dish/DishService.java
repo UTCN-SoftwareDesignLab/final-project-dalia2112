@@ -11,6 +11,8 @@ import java.util.List;
 public interface DishService {
     List<Dish> findAll();
 
+    Dish findById(long id);
+
     Notification<Boolean> addDish(String name, Ingredient ingredients, float price);
 
     Notification<Boolean> updateDish(long id, String name, float price);
