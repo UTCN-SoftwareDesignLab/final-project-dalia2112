@@ -1,7 +1,6 @@
 package restaurant.service.orderr;
 
 import org.springframework.stereotype.Service;
-import restaurant.model.Card;
 import restaurant.model.Dish;
 import restaurant.model.Orderr;
 import restaurant.model.User;
@@ -14,7 +13,7 @@ import java.util.Map;
 public interface OrderrService {
     List<Orderr> findAll();
 
-    Notification<Boolean> addOrderr(Map<Dish,Integer> dishMap, User client);
+    Notification<Boolean> addOrderr(Map<Dish, Integer> dishMap, User client);
 
     List<String> cartDishes(User user);
 
@@ -23,6 +22,8 @@ public interface OrderrService {
 
     Notification<Boolean> completeOrderr(long userId, String addr, String city, String state, int zip);
 
-    void payOrderr(long orderrId);
+    void payOrderr(Orderr orderr);
+
+    void setRating(String star, long userId);
 
 }

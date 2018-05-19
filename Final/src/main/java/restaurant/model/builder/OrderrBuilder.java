@@ -54,6 +54,17 @@ public class OrderrBuilder {
         return this;
     }
 
+    public OrderrBuilder setProcessed(boolean processed) {
+        orderr.setProcessed(processed);
+        return this;
+    }
+
+    public OrderrBuilder setRating(int rating) {
+        orderr.setRating(rating);
+        return this;
+    }
+
+
     public Orderr build() {
         return orderr;
     }

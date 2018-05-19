@@ -2,7 +2,6 @@ package restaurant.service.orderr;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import restaurant.model.Card;
 import restaurant.model.Dish;
 import restaurant.model.Orderr;
 import restaurant.model.User;
@@ -10,8 +9,10 @@ import restaurant.model.builder.OrderrBuilder;
 import restaurant.model.validation.Notification;
 import restaurant.repository.OrderrRepository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderrServiceImpl implements OrderrService {
@@ -24,6 +25,14 @@ public class OrderrServiceImpl implements OrderrService {
         return orderrRepository.findAll();
     }
 
+    public Orderr getUnprocessed(List<Orderr> orderrs) {
+        for (Orderr orderr : orderrs) {
+            if (!orderr.isProcessed())
+                return orderr;
+        }
+        return null;
+    }
+
     @Override
     public Notification<Boolean> addOrderr(Map<Dish, Integer> dishMap, User client) {
         Notification<Boolean> notification = new Notification<>();
@@ -34,18 +43,19 @@ public class OrderrServiceImpl implements OrderrService {
         }
         List<Dish> dishes = new ArrayList<>();
         dishes.addAll(dishMap.keySet());
-        if (orderr1.size() == 0) {
+        if (getUnprocessed(orderr1) == null) {
             Orderr orderr = new OrderrBuilder()
                     .setDishes(dishMap)
                     .setClient(client)
                     .setReceit(sum)
+                    .setProcessed(false)
+                    .setRating(0)
                     .build();
             notification.setResult(true);
             orderrRepository.save(orderr);
         } else {
 
-
-            Orderr orderr = orderr1.get(0);
+            Orderr orderr = getUnprocessed(orderr1);
             Map tmp = new HashMap(dishMap);
             tmp.keySet().removeAll(orderr.getDishes().keySet());
             orderr.getDishes().putAll(tmp);
@@ -61,8 +71,9 @@ public class OrderrServiceImpl implements OrderrService {
     @Override
     public List<String> cartDishes(User user) {
         if (orderrRepository.findByClientId(user.getId()).size() == 0) return null;
-
-        Map<Dish,Integer> dishist=orderrRepository.findByClientId(user.getId()).get(0).getDishes();
+        Orderr orderr = getUnprocessed(orderrRepository.findByClientId(user.getId()));
+        if (orderr == null) return null;
+        Map<Dish, Integer> dishist = getUnprocessed(orderrRepository.findByClientId(user.getId())).getDishes();
         List<String> list = new ArrayList<>();
         for (Dish dish : dishist.keySet()) {
             float subprice = dish.getPrice() * dishist.get(dish);
@@ -70,7 +81,6 @@ public class OrderrServiceImpl implements OrderrService {
                 list.add(dish.getName() + "\t        x " + dishist.get(dish) + "\t         " + subprice);
             }
         }
-        System.out.println(list.size());
         return list;
     }
 
@@ -78,18 +88,18 @@ public class OrderrServiceImpl implements OrderrService {
     @Override
     public Orderr findByClientId(long id) {
         if (orderrRepository.findByClientId(id).size() == 0) return null;
-        return orderrRepository.findByClientId(id).get(0);
+        return getUnprocessed(orderrRepository.findByClientId(id));
     }
 
     @Override
     public Notification<Boolean> completeOrderr(long userId, String addr, String city, String state, int zip) {
         Notification<Boolean> notification = new Notification<>();
-        if(orderrRepository.findByClientId(userId).size()==0){
+        if (orderrRepository.findByClientId(userId).size() == 0) {
             notification.addError("No order!");
             notification.setResult(false);
             return notification;
         }
-        Orderr orderr = orderrRepository.findByClientId(userId).get(0);
+        Orderr orderr = getUnprocessed(orderrRepository.findByClientId(userId));
         orderr.setAddress(addr);
         orderr.setCity(city);
         orderr.setState(state);
@@ -99,8 +109,24 @@ public class OrderrServiceImpl implements OrderrService {
     }
 
     @Override
-    public void payOrderr(long orderrId){
-        orderrRepository.deleteById(orderrId);
+    public void payOrderr(Orderr orderr) {
+        orderr.setProcessed(true);
+        orderrRepository.save(orderr);
+    }
+
+    private Orderr getLastProcessedOrderr(List<Orderr> orderrs) {
+        for (int counter = orderrs.size() - 1; counter >= 0; counter--) {
+            if (orderrs.get(counter).isProcessed())
+                return orderrs.get(counter);
+        }
+        return null;
+    }
+
+    public void setRating(String star, long userId) {
+        int starInt = Integer.parseInt(star.substring(4, 5));
+        Orderr orderr = getLastProcessedOrderr(orderrRepository.findByClientId(userId));
+        orderr.setRating(starInt);
+        orderrRepository.save(orderr);
     }
 
 }

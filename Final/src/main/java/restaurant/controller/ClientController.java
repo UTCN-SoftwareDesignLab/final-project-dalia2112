@@ -102,6 +102,9 @@ public class ClientController {
     @RequestMapping(value = "/orders", params = "cbb", method = RequestMethod.POST)
     public String commandDishes(Model model, HttpServletRequest request, Authentication authentication) {
         String[] dishesIds = request.getParameterValues("cbx");
+        if (dishesIds.length == 0) {
+            return "orders";
+        }
         Map<Dish, Integer> dishNr = new HashMap<>();
         for (int i = 0; i < dishesIds.length; i++) {
             String quan = request.getParameter(dishesIds[i]);
@@ -139,9 +142,8 @@ public class ClientController {
             showMessage(model, true, "", checkCard.getFormattedErrors());
             return "orders";
         }
-
-        orderrService.payOrderr(orderr.getId());
-        showDishes(model,dishService.findAll(),null,null);
+        orderrService.payOrderr(orderr);
+        showDishes(model, dishService.findAll(), null, null);
         showMessage(model, false, "ALL done", "");
         return "orders";
     }
@@ -155,5 +157,17 @@ public class ClientController {
             model.addAttribute("succMessage", succMessage);
         }
     }
+
+    /*****REVIEWS***/
+    //GET REVIEW
+    @RequestMapping(value = "/orders", params = "rew", method = RequestMethod.POST)
+    public String getReview(Model model, HttpServletRequest request, Authentication authentication) {
+        String[] stars = request.getParameterValues("star");
+        orderrService.setRating(stars[0], userService.findByUsername(authentication.getName()).getId());
+        model.addAttribute("succ", true);
+        model.addAttribute("succMessage", "Thank you for your review! Your opinion matters to us!");
+        return "orders";
+    }
+
 
 }

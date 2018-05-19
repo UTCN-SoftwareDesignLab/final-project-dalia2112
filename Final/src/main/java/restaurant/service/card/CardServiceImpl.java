@@ -60,6 +60,8 @@ public class CardServiceImpl implements CardService {
         Card card = cardRepository.findByAccountNumber(credCardNr);
         if (card == null) {
             myNotification(notification, "Invalid credit card numeber!");
+            notification.setResult(false);
+            return notification;
         }
         if (card.getExpMonth() == expMonth && card.getExpYear() == expYear && card.getcVV() == cvv) {
             if (sumToPay > card.getSum()) {
@@ -74,7 +76,7 @@ public class CardServiceImpl implements CardService {
             notification.setResult(true);
             return notification;
         }
-        return myNotification(notification, "One of exp month,year, or CVV is invalid!");
+        return myNotification(notification, "One of exp month,year, or CVV is invalid! "+card.getExpMonth()+" "+card.getExpYear()+" "+card.getcVV());
     }
 
     private Notification<Boolean> myNotification(Notification notification, String message) {

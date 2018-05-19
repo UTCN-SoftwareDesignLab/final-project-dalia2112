@@ -21,6 +21,8 @@ public class Orderr {
     private String city;
     private String state;
     private int zip;
+    private boolean processed;
+    private int rating;
 
 
     public Map<Dish, Integer> getDishes() {
@@ -87,5 +89,21 @@ public class Orderr {
 
     public void setZip(int zip) {
         this.zip = zip;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }
