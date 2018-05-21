@@ -4,7 +4,18 @@ import org.springframework.stereotype.Service;
 import restaurant.model.Orderr;
 import restaurant.model.validation.Notification;
 
+import java.util.List;
+
 @Service
 public interface EmployeeService {
-    Notification<Boolean> takeOrderr(Orderr orderr);
+    List<String> getCars();
+
+    Notification<Boolean> setCarToOrder(int car, long orderId);
+
+    List<String> getAvailableCars();
+
+    List<Orderr> getDeliveredOrders();
+
+    List<Orderr> getAllProcessedOrders();
+
 }

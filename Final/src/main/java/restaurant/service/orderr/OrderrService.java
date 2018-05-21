@@ -26,4 +26,9 @@ public interface OrderrService {
 
     void setRating(String star, long userId);
 
+//    List<Orderr> getAllProcessedOrders();
+
+//    List<Orderr> getDeliveredOrders();
+
+    Orderr findById(long id);
 }

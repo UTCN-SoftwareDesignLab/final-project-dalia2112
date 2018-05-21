@@ -1,10 +1,246 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Delivery</title>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+         * {
+    box-sizing: border-box;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 50.00%;
+    padding: 10px;
+    height: 650px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
+}
+
+.container {
+  background-color: #f2f2f2;
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+input[type=text] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 30%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+span.price {
+  float: right;
+  color: grey;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 800px) {
+  .row {
+    flex-direction: column-reverse;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+
+    </style>
+
 </head>
 <body>
+<center><font size="50">Manage the deliveries</font></center>
+<h2><a href="/login">Logout</a><br/></h2>
+<div class="container">
+    <form th:action="@{/delivery}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+        <div class="row">
+            <div class="col-25" style="background-color:#aaa;">
+                <h2>Undelivered Orders</h2>
+                <hr>
+                <table id="myTable" border="1">
+                    <thead>
+                    <tr>
+                        <th>Checked</th>
+                        <th>Id</th>
+                        <th>Client</th>
+                        <th>Receit</th>
+                        <th>Processed</th>
+                        <th>Address</th>
+                        <th>Car</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ord : ${orders}">
+                        <td><input type="checkbox" class="chcktbl " id="cbx" name="cbx" th:value="${ord.id}"></td>
+                        <td th:text="${ord.id}"></td>
+                        <td th:text="${ord.getClientName()}"></td>
+                        <td th:text="${ord.receit}"></td>
+                        <td th:text="${ord.processed}"></td>
+                        <td th:text="${ord.address}"></td>
+                        <td><select th:id="${ord.id}" th:name="${ord.id}" class="form-control">
+                            <option th:each="val : ${list}" th:text="${val}"></option>
+                        </select></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p>
+                    <button type="submit" id="rew" name="rew" class="btn">Rate us</button>
+                </p>
 
+            </div>
+
+            <div class="col-50" style="background-color:#bbb;">
+                <h2>Delivered Orders</h2>
+                <hr>
+                <table id="myTable2" border="1">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Client</th>
+                        <th>Receit</th>
+                        <th>Processed</th>
+                        <th>Address</th>
+                        <th>Car</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ord2 : ${orders2}">
+                        <td th:text="${ord2.id}"></td>
+                        <td th:text="${ord2.getClientName()}"></td>
+                        <td th:text="${ord2.receit}"></td>
+                        <td th:text="${ord2.processed}"></td>
+                        <td th:text="${ord2.address}"></td>
+                        <td th:text="${ord2.car}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
 </body>
 </html>

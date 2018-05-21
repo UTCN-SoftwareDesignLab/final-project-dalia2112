@@ -49,12 +49,6 @@ public class ClientController {
     }
 
 
-    @RequestMapping(value = "/delivery", method = RequestMethod.GET)
-    public String showDeliveryMenu() {
-        return "delivery";
-    }
-
-
     // ADD CARD TO CLIENT
     @RequestMapping(value = "/client", params = "addCard", method = RequestMethod.POST)
     public String addClient(Authentication authentication, HttpServletRequest request, Model model, @RequestParam int month, @RequestParam int year, @RequestParam String accnr, @RequestParam int cvv, @RequestParam float sum) {

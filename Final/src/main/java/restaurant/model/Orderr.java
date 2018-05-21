@@ -10,7 +10,7 @@ public class Orderr {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @ElementCollection
-    Map<Dish, Integer> dishes;
+    private Map<Dish, Integer> dishes;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -23,6 +23,9 @@ public class Orderr {
     private int zip;
     private boolean processed;
     private int rating;
+    @ElementCollection
+    private Map<User,String> employees;
+    private int car;
 
 
     public Map<Dish, Integer> getDishes() {
@@ -105,5 +108,25 @@ public class Orderr {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public Map<User, String> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Map<User, String> employees) {
+        this.employees = employees;
+    }
+
+    public String getClientName(){
+        return client.getName();
+    }
+
+    public int getCar() {
+        return car;
+    }
+
+    public void setCar(int car) {
+        this.car = car;
     }
 }

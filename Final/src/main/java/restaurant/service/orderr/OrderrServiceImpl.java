@@ -50,6 +50,7 @@ public class OrderrServiceImpl implements OrderrService {
                     .setReceit(sum)
                     .setProcessed(false)
                     .setRating(0)
+                    .setCar(0)
                     .build();
             notification.setResult(true);
             orderrRepository.save(orderr);
@@ -129,4 +130,27 @@ public class OrderrServiceImpl implements OrderrService {
         orderrRepository.save(orderr);
     }
 
+//    public List<Orderr> getAllProcessedOrders(){
+//        List<Orderr> orderrs=new ArrayList<>();
+//        for(Orderr orderr:orderrRepository.findAll()){
+//            if(orderr.isProcessed())
+//                orderrs.add(orderr);
+//        }
+//        return orderrs;
+//    }
+
+    @Override
+    public  Orderr findById(long id){
+        return orderrRepository.findById(id);
+    }
+
+//    public List<Orderr> getDeliveredOrders() {
+//        List<Orderr> orderrs = new ArrayList<>();
+//        for (Orderr orderr : getAllProcessedOrders()) {
+//            if (orderr.getCar() != 0)
+//                orderrs.add(orderr);
+//
+//        }
+//        return orderrs;
+//    }
 }

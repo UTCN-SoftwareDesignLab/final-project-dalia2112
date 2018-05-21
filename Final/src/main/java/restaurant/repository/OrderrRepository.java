@@ -9,4 +9,8 @@ import java.util.List;
 public interface OrderrRepository extends JpaRepository<Orderr, Long> {
 
     List<Orderr> findByClientId(long id);
+
+    Orderr findById(long id);
+
+    List<Orderr> findByCar(int car);
 }
