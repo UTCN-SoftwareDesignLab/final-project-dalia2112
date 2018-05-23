@@ -76,7 +76,12 @@ public class CardServiceImpl implements CardService {
             notification.setResult(true);
             return notification;
         }
-        return myNotification(notification, "One of exp month,year, or CVV is invalid! "+card.getExpMonth()+" "+card.getExpYear()+" "+card.getcVV());
+        return myNotification(notification, "One of exp month,year, or CVV is invalid! " + card.getExpMonth() + " " + card.getExpYear() + " " + card.getcVV());
+    }
+
+    @Override
+    public void save(Card card) {
+        cardRepository.save(card);
     }
 
     private Notification<Boolean> myNotification(Notification notification, String message) {

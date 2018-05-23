@@ -2,6 +2,7 @@ package restaurant.service.dish;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import restaurant.model.Constants;
 import restaurant.model.Dish;
 import restaurant.model.Ingredient;
 import restaurant.model.builder.DishBuilder;
@@ -24,8 +25,19 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public Dish findById(long id){
+    public Dish findById(long id) {
         return dishRepository.findById(id);
+    }
+
+    public void createDishes() {
+        for (int i = 0; i < 3; i++) {
+            Dish dish = new DishBuilder()
+                    .setName(Constants.Dishes.NAMES[i])
+                    .setIngredients(Constants.Dishes.getIngredients().get(i))
+                    .setMoney(i * 10 + 20)
+                    .build();
+            dishRepository.save(dish);
+        }
     }
 
     @Override

@@ -17,18 +17,13 @@ public interface OrderrService {
 
     List<String> cartDishes(User user);
 
-
     Orderr findByClientId(long id);
 
-    Notification<Boolean> completeOrderr(long userId, String addr, String city, String state, int zip);
-
-    void payOrderr(Orderr orderr);
+    void payOrderr(Orderr orderr, double lat, double lng);
 
     void setRating(String star, long userId);
 
-//    List<Orderr> getAllProcessedOrders();
-
-//    List<Orderr> getDeliveredOrders();
-
     Orderr findById(long id);
+
+    void delete(Orderr orderr);
 }

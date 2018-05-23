@@ -10,12 +10,13 @@ import java.util.List;
 public interface EmployeeService {
     List<String> getCars();
 
-    Notification<Boolean> setCarToOrder(int car, long orderId);
+    Notification<Boolean> setCarToOrder(int car, Orderr orderr);
 
     List<String> getAvailableCars();
 
     List<Orderr> getDeliveredOrders();
 
     List<Orderr> getAllProcessedOrders();
+
 
 }

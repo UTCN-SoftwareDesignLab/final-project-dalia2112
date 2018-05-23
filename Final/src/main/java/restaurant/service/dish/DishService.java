@@ -18,4 +18,6 @@ public interface DishService {
     Notification<Boolean> updateDish(long id, String name, float price);
 
     Notification<Boolean> deleteDish(long id);
+
+    void createDishes();
 }

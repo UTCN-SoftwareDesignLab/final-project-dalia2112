@@ -85,6 +85,8 @@ public class ClientController {
     //SHOW ORDERS PAGE
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String showOrderPage(Model model, Authentication authentication) {
+        if (dishService.findAll().size() == 0)
+            dishService.createDishes();
         User user = userService.findByUsername(authentication.getName());
         Orderr orderr = orderrService.findByClientId(user.getId());
         showDishes(model, dishService.findAll(), orderrService.cartDishes(user), orderr);
@@ -123,22 +125,24 @@ public class ClientController {
 
     //plata propriu-zisa
     @RequestMapping(value = "/orders", params = "chk", method = RequestMethod.POST)
-    public String paypayOrder(Model model, HttpServletRequest request, Authentication authentication, @RequestParam String adr, @RequestParam String city, @RequestParam String state, @RequestParam int zip, @RequestParam String ccnum, @RequestParam int expmonth, @RequestParam int expyear, @RequestParam int cvv) {
-        User user = userService.findByUsername(authentication.getName());
-        Orderr orderr = orderrService.findByClientId(user.getId());
-        Notification<Boolean> completeOrder = orderrService.completeOrderr(user.getId(), adr, city, state, zip);
-        if (completeOrder.hasErrors()) {
-            showMessage(model, completeOrder.hasErrors(), "", completeOrder.getFormattedErrors());
+    public String paypayOrder(Model model, HttpServletRequest request, Authentication authentication, @RequestParam String ccnum, @RequestParam int expmonth, @RequestParam int expyear, @RequestParam int cvv, @RequestParam(value = "ltt") String coordinates) {
+        if (coordinates.equalsIgnoreCase("")) {
+            showMessage(model, true, "", "You must give give your address by clicking on the map below!");
             return "orders";
         }
+
+        User user = userService.findByUsername(authentication.getName());
+        Orderr orderr = orderrService.findByClientId(user.getId());
         Notification<Boolean> checkCard = cardService.checkandPay(user, ccnum, expmonth, expyear, cvv, orderr.getReceit());
         if (checkCard.hasErrors()) {
             showMessage(model, true, "", checkCard.getFormattedErrors());
             return "orders";
         }
-        orderrService.payOrderr(orderr);
+        orderrService.payOrderr(orderr, Double.parseDouble(coordinates.split(" ")[0]), Double.parseDouble(coordinates.split(" ")[1]));
         showDishes(model, dishService.findAll(), null, null);
         showMessage(model, false, "ALL done", "");
+
+        System.out.println("Lat " + coordinates.split(" ")[0] + " Long " + coordinates.split(" ")[1]);
         return "orders";
     }
 

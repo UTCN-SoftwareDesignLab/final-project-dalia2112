@@ -189,7 +189,6 @@ span.price {
                         <th>Client</th>
                         <th>Receit</th>
                         <th>Processed</th>
-                        <th>Address</th>
                         <th>Car</th>
                     </tr>
                     </thead>
@@ -200,7 +199,6 @@ span.price {
                         <td th:text="${ord.getClientName()}"></td>
                         <td th:text="${ord.receit}"></td>
                         <td th:text="${ord.processed}"></td>
-                        <td th:text="${ord.address}"></td>
                         <td><select th:id="${ord.id}" th:name="${ord.id}" class="form-control">
                             <option th:each="val : ${list}" th:text="${val}"></option>
                         </select></td>
@@ -208,9 +206,11 @@ span.price {
                     </tbody>
                 </table>
                 <p>
-                    <button type="submit" id="rew" name="rew" class="btn">Rate us</button>
+                    <button type="submit" id="rew" name="rew" class="btn">Set cars to orders</button>
                 </p>
-
+                <!-- ALERTS -->
+                <div th:if="${err}" class="alert alert-danger" role="alert" th:text="${errMsg}"></div>
+                <div th:if="${succ}" class="alert alert-success" role="alert" th:text="${succMsg}"></div>
             </div>
 
             <div class="col-50" style="background-color:#bbb;">
@@ -223,7 +223,6 @@ span.price {
                         <th>Client</th>
                         <th>Receit</th>
                         <th>Processed</th>
-                        <th>Address</th>
                         <th>Car</th>
                     </tr>
                     </thead>
@@ -233,7 +232,6 @@ span.price {
                         <td th:text="${ord2.getClientName()}"></td>
                         <td th:text="${ord2.receit}"></td>
                         <td th:text="${ord2.processed}"></td>
-                        <td th:text="${ord2.address}"></td>
                         <td th:text="${ord2.car}"></td>
                     </tr>
                     </tbody>

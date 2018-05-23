@@ -34,11 +34,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         return car;
     }
 
-    public Notification<Boolean> setCarToOrder(int car, long orderId) {
+    public Notification<Boolean> setCarToOrder(int car, Orderr orderr) {
         Notification<Boolean> notification = new Notification<>();
+        if (getDistanceFromRestaurant(orderr) > 15) {
+            notification.addError("Delivery address of order " + orderr.getId() + " is greater than 15 km! Your money will be returned.");
+            notification.setResult(false);
+            return notification;
+        }
         List<Orderr> orderrs = orderrRepository.findByCar(car);
         if (orderrs.size() < 2) {
-            Orderr orderr = orderrRepository.findById(orderId);
             orderr.setCar(car);
             orderrRepository.save(orderr);
             notification.setResult(true);
@@ -63,12 +67,28 @@ public class EmployeeServiceImpl implements EmployeeService {
         return orderrs;
     }
 
-    public List<Orderr> getAllProcessedOrders(){
-        List<Orderr> orderrs=new ArrayList<>();
-        for(Orderr orderr:orderrRepository.findAll()){
-            if(orderr.isProcessed())
+    public List<Orderr> getAllProcessedOrders() {
+        List<Orderr> orderrs = new ArrayList<>();
+        for (Orderr orderr : orderrRepository.findAll()) {
+            if (orderr.isProcessed())
                 orderrs.add(orderr);
         }
         return orderrs;
     }
+
+    private double getDistanceFromRestaurant(Orderr orderr) {
+        double restaurantLatitude = -16.541324 * (Math.PI / 180);
+        double restaurantLongitude = -151.734107 * (Math.PI / 180);
+        double chosenLatitude = orderr.getCoordLat() * (Math.PI / 180);
+        double chosenLongitude = orderr.getCoordLng() * (Math.PI / 180);
+        double diffLat = (restaurantLatitude - chosenLatitude);
+        double diffLng = (restaurantLongitude - chosenLongitude);
+        double sinLat = Math.sin(diffLat / 2);
+        double sinLng = Math.sin(diffLng / 2);
+        double a = Math.pow(sinLat, 2.0) + Math.cos(restaurantLatitude) * Math.cos(chosenLatitude) * Math.pow(sinLng, 2.0);
+        double earth_radius = 6378.1;
+        double distance = earth_radius * 2 * Math.asin(Math.min(1, Math.sqrt(a)));
+        return distance;
+    }
+
 }

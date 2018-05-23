@@ -1,5 +1,12 @@
 package restaurant.model;
 
+import restaurant.model.builder.IngredientBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static restaurant.model.Constants.Ingredients.*;
+
 public class Constants {
     public static class Ingredients {
 
@@ -41,5 +48,31 @@ public class Constants {
                 MILK, CHEESE, HAM, CHICKEN, BEAF,
                 PORK
         };
+    }
+
+    public static class Dishes {
+        public static final String[] NAMES=new String[]{"Pizza","Apple Pie","Pork Chops"};
+
+        private static final String[] INGREDIENTS1=new String[]{DOUGH,ONION,TOMATOE,HAM,CHEESE};
+        private static final String[] INGREDIENTS2=new String[]{DOUGH,VANILLA,FRUITS};
+        private static final String[] INGREDIENTS3=new String[]{PORK,POTATO,CHILLY};
+        private static final String[][] ALLINGREDIENTS={INGREDIENTS1,INGREDIENTS2,INGREDIENTS3};
+        public static final List<List<Ingredient>> getIngredients(){
+            List<List<Ingredient>> list=new ArrayList<>();
+            for(String[] ingr:ALLINGREDIENTS){
+                List<Ingredient> ingredients=new ArrayList<>();
+                for(String ingredient:ingr){
+                    Ingredient ingredient1=new IngredientBuilder()
+                            .setName(ingredient)
+                            .setVegan(false)
+                            .build();
+                    ingredients.add(ingredient1);
+                }
+                list.add(ingredients);
+            }
+            return list;
+        }
+
+
     }
 }

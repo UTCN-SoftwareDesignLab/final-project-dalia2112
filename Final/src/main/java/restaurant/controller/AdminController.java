@@ -96,6 +96,7 @@ public class AdminController {
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
     public String showMenu() {
         ingredientService.createIngredients();
+        dishService.createDishes();
         return "menu";
     }
 
@@ -103,8 +104,6 @@ public class AdminController {
     @RequestMapping(value = "/menu", params = "ps", method = RequestMethod.POST)
     public String addDish(Model model,HttpServletRequest request, @RequestParam String name, @RequestParam float price) {
 
-        System.out.println("acilisa");
-        System.out.println(request.getParameter("mySelect2"));
         Ingredient ingredient = ingredientService.findByName(request.getParameter("mySelect2")).get(0);
         Notification<Boolean> notification=dishService.addDish(name, ingredient, price);
         if (!notification.getResult()) {
@@ -123,7 +122,6 @@ public class AdminController {
     public String viewDishes(Model model, Authentication authentication) {
         List<Dish> items = dishService.findAll();
         model.addAttribute("dishes", items);
-        System.out.println(authentication.getName());
         return "/menu";
     }
 

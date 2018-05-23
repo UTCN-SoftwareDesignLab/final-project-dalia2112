@@ -62,7 +62,6 @@ public class OrderrServiceImpl implements OrderrService {
             orderr.getDishes().putAll(tmp);
 
             orderr.setReceit(orderr.getReceit() + sum);
-//            orderr.getDishes().
             notification.setResult(true);
             orderrRepository.save(orderr);
         }
@@ -92,26 +91,12 @@ public class OrderrServiceImpl implements OrderrService {
         return getUnprocessed(orderrRepository.findByClientId(id));
     }
 
-    @Override
-    public Notification<Boolean> completeOrderr(long userId, String addr, String city, String state, int zip) {
-        Notification<Boolean> notification = new Notification<>();
-        if (orderrRepository.findByClientId(userId).size() == 0) {
-            notification.addError("No order!");
-            notification.setResult(false);
-            return notification;
-        }
-        Orderr orderr = getUnprocessed(orderrRepository.findByClientId(userId));
-        orderr.setAddress(addr);
-        orderr.setCity(city);
-        orderr.setState(state);
-        orderr.setZip(zip);
-        notification.setResult(true);
-        return notification;
-    }
 
     @Override
-    public void payOrderr(Orderr orderr) {
+    public void payOrderr(Orderr orderr, double lat, double lng) {
         orderr.setProcessed(true);
+        orderr.setCoordLat(lat);
+        orderr.setCoordLng(lng);
         orderrRepository.save(orderr);
     }
 
@@ -130,27 +115,13 @@ public class OrderrServiceImpl implements OrderrService {
         orderrRepository.save(orderr);
     }
 
-//    public List<Orderr> getAllProcessedOrders(){
-//        List<Orderr> orderrs=new ArrayList<>();
-//        for(Orderr orderr:orderrRepository.findAll()){
-//            if(orderr.isProcessed())
-//                orderrs.add(orderr);
-//        }
-//        return orderrs;
-//    }
-
     @Override
-    public  Orderr findById(long id){
+    public Orderr findById(long id) {
         return orderrRepository.findById(id);
     }
 
-//    public List<Orderr> getDeliveredOrders() {
-//        List<Orderr> orderrs = new ArrayList<>();
-//        for (Orderr orderr : getAllProcessedOrders()) {
-//            if (orderr.getCar() != 0)
-//                orderrs.add(orderr);
-//
-//        }
-//        return orderrs;
-//    }
+    public void delete(Orderr orderr) {
+        orderrRepository.delete(orderr);
+    }
+
 }

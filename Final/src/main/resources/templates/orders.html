@@ -4,12 +4,20 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Orders</title>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
+    #map{
+      height:700px;
+      width:100%;
+    }
+
        * {
     box-sizing: border-box;
 }
@@ -205,6 +213,12 @@ label.star:before {
 }
 
 
+
+
+
+
+
+
     </style>
 
 </head>
@@ -218,10 +232,6 @@ label.star:before {
             <div class="col-25" style="background-color:#aaa;">
                 <h2>Our menu</h2>
                 <hr>
-                <!--<select class="form-control" id="msl">-->
-                <!--<option th:each="vl : ${lst}" th:text="${vl}"></option>-->
-                <!--</select>-->
-
                 <table id="myTable" border="1">
                     <thead>
                     <tr>
@@ -235,8 +245,7 @@ label.star:before {
                     </thead>
                     <tbody>
                     <tr th:each="dish : ${dishes}">
-                        <td><input type="checkbox" class="chcktbl " id="cbx" name="cbx" th:value="${dish.id}"
-                                   onclick="checkAll(this)"></td>
+                        <td><input type="checkbox" class="chcktbl " id="cbx" name="cbx" th:value="${dish.id}"></td>
                         <td th:text="${dish.id}"></td>
                         <td th:text="${dish.name}"></td>
                         <td th:text="${dish.getIngredientList()}"></td>
@@ -247,24 +256,6 @@ label.star:before {
                 </table>
 
 
-                <script>
-                  function checkAll(bx) {
-                        var checkedValue = null;
-                        var inputElements = document.getElementsByClassName('chcktbl');
-                        for(var i=0; inputElements[i]; ++i){
-                            if(inputElements[i].checked){
-                               checkedValue = inputElements[i].value;
-                               console.log(checkedValue);
-                               break;
-                            }
-                        }
-                }
-
-
-
-
-
-                </script>
                 <p></p>
                 <input type="submit" class="btn" name="cbb" value="Add dishes to your cart"/>
 
@@ -274,22 +265,19 @@ label.star:before {
                 <p></p>
                 <hr>
                 <font size="6">Let us know how happy you are with our services <span>&#9787;</span></font>
-
-                <!--<p><div class="stars">-->
-                <!--<form action="">-->
-                <input class="star star-5" id="star-5" type="radio" name="star" th:value="star5"/>
-                <label class="star star-5" for="star-5"></label>
-                <input class="star star-4" id="star-4" type="radio" name="star" th:value="star4"/>
-                <label class="star star-4" for="star-4"></label>
-                <input class="star star-3" id="star-3" type="radio" name="star" th:value="star3"/>
+                <p>
+                    <input class="star star-5" id="star-5" type="radio" name="star" th:value="star5"/>
+                    <label class="star star-5" for="star-5"></label>
+                    <input class="star star-4" id="star-4" type="radio" name="star" th:value="star4"/>
+                    <label class="star star-4" for="star-4"></label>
+                <p><input class="star star-3" id="star-3" type="radio" name="star" th:value="star3"/></p>
                 <label class="star star-3" for="star-3"></label>
-                <input class="star star-2" id="star-2" type="radio" name="star" th:value="star2"/>
+                <p><input class="star star-2" id="star-2" type="radio" name="star" th:value="star2"/></p>
                 <label class="star star-2" for="star-2"></label>
-                <input class="star star-1" id="star-1" type="radio" name="star" th:value="star1"/>
+                <p>
+                <p><input class="star star-1" id="star-1" type="radio" name="star" th:value="star1"/></p></p>
                 <label class="star star-1" for="star-1"></label>
-                <!--</form>-->
-
-                <!--</div></p>-->
+                </p>
                 <p>
                     <button type="submit" id="rew" name="rew" class="btn">Rate us</button>
                 </p>
@@ -300,60 +288,29 @@ label.star:before {
                     <div class="col-50">
                         <div class="container">
                             <form action="/action_page.php">
-
-                                <div class="row">
-                                    <div class="col-50">
-                                        <h3>Billing Address</h3>
-                                        <label for="fname"><i class="fa fa-user"></i> Full Name</label>
-                                        <input type="text" id="fname" name="firstname" placeholder="John M. Doe">
-                                        <label for="email"><i class="fa fa-envelope"></i> Email</label>
-                                        <input type="text" id="email" name="email" placeholder="john@example.com">
-                                        <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
-                                        <input type="text" id="adr" name="adr" placeholder="542 W. 15th Street">
-                                        <label for="city"><i class="fa fa-institution"></i> City</label>
-                                        <input type="text" id="city" name="city" placeholder="New York">
-
-                                        <div class="row">
-                                            <div class="col-50">
-                                                <label for="state">State</label>
-                                                <input type="text" id="state" name="state" placeholder="NY">
-                                            </div>
-                                            <div class="col-50">
-                                                <label for="zip">Zip</label>
-                                                <input type="number" id="zip" name="zip" placeholder="436">
-                                            </div>
-                                        </div>
+                                <div class="col-50">
+                                    <h3>Payment</h3>
+                                    <label>Accepted Cards</label>
+                                    <div class="icon-container">
+                                        <i class="fa fa-cc-visa" style="color:navy;"></i>
+                                        <i class="fa fa-cc-amex" style="color:blue;"></i>
+                                        <i class="fa fa-cc-mastercard" style="color:red;"></i>
+                                        <i class="fa fa-cc-discover" style="color:orange;"></i>
                                     </div>
-
-                                    <div class="col-50">
-                                        <h3>Payment</h3>
-                                        <label for="fname">Accepted Cards</label>
-                                        <div class="icon-container">
-                                            <i class="fa fa-cc-visa" style="color:navy;"></i>
-                                            <i class="fa fa-cc-amex" style="color:blue;"></i>
-                                            <i class="fa fa-cc-mastercard" style="color:red;"></i>
-                                            <i class="fa fa-cc-discover" style="color:orange;"></i>
-                                        </div>
-                                        <!--<label for="cname">Name on Card</label>-->
-                                        <!--<input type="text" id="cname" name="cardname" placeholder="John More Doe">-->
-                                        <label for="ccnum">Credit card number</label>
-                                        <input type="text" id="ccnum" name="ccnum" placeholder="123-456-789">
-                                        <label for="expmonth">Exp Month</label>
-                                        <input type="number" id="expmonth" name="expmonth" placeholder="05">
-                                        <div class="row">
-                                            <div class="col-50">
-                                                <label for="expyear">Exp Year</label>
-                                                <input type="number" id="expyear" name="expyear" placeholder="2018">
-                                            </div>
-                                            <div class="col-50">
-                                                <label for="cvv">CVV</label>
-                                                <input type="number" id="cvv" name="cvv" placeholder="352">
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    <label for="ccnum">Credit card number</label>
+                                    <input type="text" id="ccnum" name="ccnum" placeholder="123-456-789">
+                                    <label for="expmonth">Exp Month</label>
+                                    <input type="number" id="expmonth" name="expmonth" placeholder="05">
+                                    <label for="expyear">Exp Year</label>
+                                    <input type="number" id="expyear" name="expyear" placeholder="2018">
+                                    <label for="cvv">CVV</label>
+                                    <input type="number" id="cvv" name="cvv" placeholder="352">
                                 </div>
+
                                 <input type="submit" id="chk" name="chk" value="Pay Order" class="btn">
+                                <form action="">
+                                    <input type="hidden" name="ltt" id="ltt"/>
+                                </form>
                             </form>
                         </div>
                     </div>
@@ -373,9 +330,139 @@ label.star:before {
 
             </div>
 
+
+            <div id="map"></div>
+            <script>
+    function initMap(){
+      // Map options
+      var options = {
+        zoom:17,
+        center:{lat:-16.541324,lng:-151.734107}
+      }
+
+      // New map
+      var map = new google.maps.Map(document.getElementById('map'), options);
+      console.log('HIIIII');
+      // Listen for click on map
+      google.maps.event.addListener(map, 'click', function(event){
+
+
+        // Add marker
+        var latitude = event.latLng.lat();
+        <!--var latitude2 = -16.541324;-->
+        <!--var radianLat1 = latitude * ( Math.PI  / 180 );-->
+        <!--var radianLat2 = latitude2 * ( Math.PI  / 180 );-->
+        var longitude = event.latLng.lng();
+        <!--var longitude2 = -151.734107;-->
+        <!--var radianLng1 = longitude * ( Math.PI  / 180 );-->
+        <!--var radianLng2 = longitude2 * ( Math.PI  / 180 );-->
+        <!--console.log(radianLat1,radianLng1);-->
+
+        <!--var earth_radius = 6378.1;-->
+        <!--// sort our the differences-->
+       <!--var diffLat =  ( radianLat1 - radianLat2 );-->
+       <!--var diffLng =  ( radianLng1 - radianLng2 );-->
+       <!--// put on a wave (hey the earth is round after all)-->
+       <!--var sinLat = Math.sin( diffLat / 2  );-->
+       <!--var sinLng = Math.sin( diffLng / 2  );-->
+       <!--var a = Math.pow(sinLat, 2.0) + Math.cos(radianLat1) * Math.cos(radianLat2) * Math.pow(sinLng, 2.0);-->
+       <!--var distance = earth_radius * 2 * Math.asin(Math.min(1, Math.sqrt(a)));-->
+       <!--console.log(distance);-->
+
+        document.getElementById('ltt').value = latitude.toString().concat(' '+longitude.toString());
+        <!--document.getElementById('looo').value = longitude;-->
+        console.log( latitude + ', ' + longitude );
+        addMarker({coords:event.latLng});
+      });
+
+      /*
+      // Add marker
+      var marker = new google.maps.Marker({
+        position:{lat:42.4668,lng:-70.9495},
+        map:map,
+        icon:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
+      });
+
+      var infoWindow = new google.maps.InfoWindow({
+        content:'<h1>Our Restaurant</h1>'
+      });
+
+      marker.addListener('click', function(){
+        infoWindow.open(map, marker);
+      });
+      */
+
+      // Array of markers
+      var markers = [
+        {
+          coords:{lat:-16.541324,lng:-151.734107},
+          iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          content:'<h1>Our Restaurant</h1>'
+        },
+      ];
+
+      // Loop through markers
+      for(var i = 0;i < markers.length;i++){
+        // Add marker
+        addMarker(markers[i]);
+      }
+
+      // Add Marker Function
+      function addMarker(props){
+      //console.log(props.coords.lat);
+      //console.log(props.coords.lng);
+        var marker = new google.maps.Marker({
+          position:props.coords,
+          map:map,
+          //icon:props.iconImage
+        });
+
+        // Check for customicon
+        if(props.iconImage){
+          // Set icon image
+          marker.setIcon(props.iconImage);
+        }
+
+        // Check content
+        if(props.content){
+          var infoWindow = new google.maps.InfoWindow({
+            content:props.content
+          });
+
+          marker.addListener('click', function(){
+            infoWindow.open(map, marker);
+          });
+        }
+      }
+    }
+
+
+        function showLocationOnMap (location) {
+            var map;
+            map = new google.maps.Map(document.getElementById('map'), {
+              center: {
+                lat: Number(location.latitude),
+                lng: Number(location.longitude)},
+                zoom: 15
+            });
+            var marker = new google.maps.Marker({
+              position: {
+                lat: Number(location.latitude),
+                lng: Number(location.longitude)},
+                map: map
+            });
+        }
+
+
+            </script>
+
+            <script async defer
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD915pBzhreQ-dqdAXC2JC_Tkn-NVGIjow&callback=initMap">
+            </script>
         </div>
         <div th:if="${fail}" class="alert alert-danger" role="alert" th:text="${failMessage}"></div>
         <div th:if="${succ}" class="alert alert-success" role="alert" th:text="${succMessage}"></div>
+
     </form>
 
 

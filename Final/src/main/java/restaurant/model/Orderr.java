@@ -17,15 +17,14 @@ public class Orderr {
     private User client;
 
     private float receit;
-    private String address;
-    private String city;
-    private String state;
-    private int zip;
     private boolean processed;
     private int rating;
-    @ElementCollection
-    private Map<User,String> employees;
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private User employees;
     private int car;
+    private double coordLat;
+    private double coordLng;
 
 
     public Map<Dish, Integer> getDishes() {
@@ -62,38 +61,6 @@ public class Orderr {
     }
 
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public int getZip() {
-        return zip;
-    }
-
-    public void setZip(int zip) {
-        this.zip = zip;
-    }
-
     public boolean isProcessed() {
         return processed;
     }
@@ -110,15 +77,15 @@ public class Orderr {
         this.rating = rating;
     }
 
-    public Map<User, String> getEmployees() {
+    public User getEmployees() {
         return employees;
     }
 
-    public void setEmployees(Map<User, String> employees) {
+    public void setEmployees(User employees) {
         this.employees = employees;
     }
 
-    public String getClientName(){
+    public String getClientName() {
         return client.getName();
     }
 
@@ -128,5 +95,21 @@ public class Orderr {
 
     public void setCar(int car) {
         this.car = car;
+    }
+
+    public double getCoordLat() {
+        return coordLat;
+    }
+
+    public void setCoordLat(double coordLat) {
+        this.coordLat = coordLat;
+    }
+
+    public double getCoordLng() {
+        return coordLng;
+    }
+
+    public void setCoordLng(double coordLng) {
+        this.coordLng = coordLng;
     }
 }
