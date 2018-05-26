@@ -13,6 +13,7 @@
             margin-top: 100px;
         }
 
+
     </style>
 
 </head>
@@ -23,12 +24,12 @@
 <div class="container">
 
     <hr>
-    <h3>Add credit/debit card</h3>
+    <h2>Add credit/debit card</h2>
     <form th:action="@{/client}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
         <div class="form-group">
             <label for="accnr" class="col-sm-4 control-label">Card number:</label>
             <div class="col-sm-8">
-                <input type="text" name="accnr" id="accnr" class="form-control"  placeholder="123-456-789"/>
+                <input type="text" name="accnr" id="accnr" class="form-control" placeholder="123-456-789"/>
             </div>
         </div>
 
@@ -69,19 +70,16 @@
 
 
         <!-- ALERTS -->
-        <div th:if="${updUErr}" class="alert alert-danger" role="alert" th:text="${updMessage}"></div>
-        <div th:if="${updUSucc}" class="alert alert-success" role="alert" th:text="${updMessage2}"></div>
+        <font size="5">
+            <div class="alert alert-danger" role="alert" th:text="${fMessage}"></div>
+        </font>
+        <font size="5">
+            <div class="alert alert-success" role="alert" th:text="${sMessage}"></div>
+        </font>
 
     </form>
 
 
-    <form th:action="@{/cardView}" method="get">
-        <input type="submit" class="button" name="viewCards" value="View Cards"/>
-    </form>
-
-    <!--<form th:action="@{/logout}" method="get">-->
-    <!--<input type="submit" class="button" name="logout" value="Logout"/>-->
-    <!--</form>-->
 </div>
 
 <table border="1">

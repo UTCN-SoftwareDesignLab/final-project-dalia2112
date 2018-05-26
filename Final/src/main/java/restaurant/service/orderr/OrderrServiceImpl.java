@@ -41,8 +41,6 @@ public class OrderrServiceImpl implements OrderrService {
         for (Dish dish1 : dishMap.keySet()) {
             sum += dish1.getPrice() * dishMap.get(dish1);
         }
-        List<Dish> dishes = new ArrayList<>();
-        dishes.addAll(dishMap.keySet());
         if (getUnprocessed(orderr1) == null) {
             Orderr orderr = new OrderrBuilder()
                     .setDishes(dishMap)
@@ -54,13 +52,11 @@ public class OrderrServiceImpl implements OrderrService {
                     .build();
             notification.setResult(true);
             orderrRepository.save(orderr);
-        } else {
-
+        } else { //the order exists and we add dishes to it
             Orderr orderr = getUnprocessed(orderr1);
             Map tmp = new HashMap(dishMap);
-            tmp.keySet().removeAll(orderr.getDishes().keySet());
+            tmp.keySet().removeAll(orderr.getDishes().keySet()); //get all new dished added
             orderr.getDishes().putAll(tmp);
-
             orderr.setReceit(orderr.getReceit() + sum);
             notification.setResult(true);
             orderrRepository.save(orderr);
@@ -93,10 +89,9 @@ public class OrderrServiceImpl implements OrderrService {
 
 
     @Override
-    public void payOrderr(Orderr orderr, double lat, double lng) {
+    public void payOrderr(Orderr orderr, double distance) {
         orderr.setProcessed(true);
-        orderr.setCoordLat(lat);
-        orderr.setCoordLng(lng);
+        orderr.setDistance(distance);
         orderrRepository.save(orderr);
     }
 
@@ -108,11 +103,19 @@ public class OrderrServiceImpl implements OrderrService {
         return null;
     }
 
-    public void setRating(String star, long userId) {
+    public Notification<Boolean> setRating(String star, long userId) {
+        Notification<Boolean>notification=new Notification<>();
         int starInt = Integer.parseInt(star.substring(4, 5));
         Orderr orderr = getLastProcessedOrderr(orderrRepository.findByClientId(userId));
+        if(orderr==null){
+            notification.addError("You must pay the order first and then you can rate us!");
+            notification.setResult(false);
+            return notification;
+        }
+        notification.setResult(true);
         orderr.setRating(starInt);
         orderrRepository.save(orderr);
+        return notification;
     }
 
     @Override

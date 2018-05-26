@@ -19,9 +19,9 @@ public interface OrderrService {
 
     Orderr findByClientId(long id);
 
-    void payOrderr(Orderr orderr, double lat, double lng);
+    void payOrderr(Orderr orderr, double distance);
 
-    void setRating(String star, long userId);
+    Notification<Boolean> setRating(String star, long userId);
 
     Orderr findById(long id);
 

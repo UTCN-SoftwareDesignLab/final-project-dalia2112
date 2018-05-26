@@ -18,5 +18,7 @@ public interface EmployeeService {
 
     List<Orderr> getAllProcessedOrders();
 
+    double getDistanceFromRestaurant(double lat, double lng);
 
+    String calcWaitingTime(Orderr orderr);
 }

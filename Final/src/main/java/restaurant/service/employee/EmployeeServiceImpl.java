@@ -36,7 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public Notification<Boolean> setCarToOrder(int car, Orderr orderr) {
         Notification<Boolean> notification = new Notification<>();
-        if (getDistanceFromRestaurant(orderr) > 15) {
+        if (orderr.getDistance() > 15) {
             notification.addError("Delivery address of order " + orderr.getId() + " is greater than 15 km! Your money will be returned.");
             notification.setResult(false);
             return notification;
@@ -44,6 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Orderr> orderrs = orderrRepository.findByCar(car);
         if (orderrs.size() < 2) {
             orderr.setCar(car);
+            calcWaitingTime(orderr);
             orderrRepository.save(orderr);
             notification.setResult(true);
             return notification;
@@ -76,11 +77,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         return orderrs;
     }
 
-    private double getDistanceFromRestaurant(Orderr orderr) {
+    public double getDistanceFromRestaurant(double lat, double lng) {
         double restaurantLatitude = -16.541324 * (Math.PI / 180);
         double restaurantLongitude = -151.734107 * (Math.PI / 180);
-        double chosenLatitude = orderr.getCoordLat() * (Math.PI / 180);
-        double chosenLongitude = orderr.getCoordLng() * (Math.PI / 180);
+        double chosenLatitude = lat * (Math.PI / 180);
+        double chosenLongitude = lng * (Math.PI / 180);
         double diffLat = (restaurantLatitude - chosenLatitude);
         double diffLng = (restaurantLongitude - chosenLongitude);
         double sinLat = Math.sin(diffLat / 2);
@@ -89,6 +90,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         double earth_radius = 6378.1;
         double distance = earth_radius * 2 * Math.asin(Math.min(1, Math.sqrt(a)));
         return distance;
+    }
+
+    public String calcWaitingTime(Orderr orderr) {
+        double distance = orderr.getDistance();
+        double sumTime = 0;
+        for (Orderr orderr1 : orderrRepository.findByCar(orderr.getCar())) {
+            sumTime += orderr.getWaitingTime();
+            if (orderr1 == orderr) {
+                int mins = 20+(int)(60 * (sumTime + distance / 50));
+                orderr1.setWaitingTime(mins);
+                orderrRepository.save(orderr1);
+                break;
+            }
+        }
+        int hour = 0, min = orderr.getWaitingTime();
+        while (min > 60) {
+            hour++;
+            min -= 60;
+        }
+        return hour + ":" + min;
     }
 
 }

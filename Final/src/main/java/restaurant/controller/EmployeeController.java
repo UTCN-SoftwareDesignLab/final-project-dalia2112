@@ -1,7 +1,6 @@
 package restaurant.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,6 @@ import java.util.List;
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
-
     @Autowired
     private OrderrService orderrService;
     @Autowired
@@ -44,9 +42,10 @@ public class EmployeeController {
 
     //set cars with orders => MAX 2 ORDERS/CAR
     @RequestMapping(value = "/delivery", params = "rew", method = RequestMethod.POST)
-    public String setCars(Model model, HttpServletRequest request, Authentication authentication) {
+//    @ResponseBody
+    public String setCars(Model model, HttpServletRequest request) {
         String[] orderIds = request.getParameterValues("cbx");
-        if (orderIds.length == 0) {
+        if (orderIds == null || orderIds.length == 0) {
             return "delivery";
         }
         for (int i = 0; i < orderIds.length; i++) {
@@ -58,26 +57,35 @@ public class EmployeeController {
                 card.setSum(card.getSum() + orderr.getReceit());
                 cardService.save(card);
                 orderrService.delete(orderr);
+                model.addAttribute("errMsg", notification.getFormattedErrors());
             }
-            showMessage(model, notification.hasErrors(), "The command has been delivered", notification.getFormattedErrors());
+            model.addAttribute("succMsg", "The command has been delivered. Waiting time: "+employeeService.calcWaitingTime(orderr));
             List<Orderr> orderrList = employeeService.getAllProcessedOrders();
             orderrList.removeAll(employeeService.getDeliveredOrders());
             model.addAttribute("orders", orderrList);
             model.addAttribute("orders2", employeeService.getDeliveredOrders());
             model.addAttribute("list", employeeService.getAvailableCars());
+//            try {
+//                sendEmail();
+//                System.out.println("EMAIL SENT!");
+//            } catch (Exception e) {
+//                System.out.println("NOOOOOOOOO EMAIL SENT!");
+//                e.printStackTrace();
+//            }
         }
         return "delivery";
     }
 
-    void showMessage(Model model, boolean fail, String succMessage, String failMessage) {
-        if (fail) {
-            model.addAttribute("err", true);
-            model.addAttribute("errMsg", failMessage);
-        } else {
-            model.addAttribute("succ", true);
-            model.addAttribute("succMsg", succMessage);
-        }
-    }
+//    private void sendEmail() throws Exception{
+//        MimeMessage message = sender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(message);
+//
+//        helper.setTo("daliacopaciu@gmail.com");
+//        helper.setText("How are you?");
+//        helper.setSubject("Hi");
+//
+//        sender.send(message);
+//    }
 
 }
 

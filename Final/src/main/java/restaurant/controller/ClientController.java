@@ -1,12 +1,15 @@
 package restaurant.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import restaurant.Greeting;
 import restaurant.model.Card;
 import restaurant.model.Dish;
 import restaurant.model.Orderr;
@@ -14,6 +17,7 @@ import restaurant.model.User;
 import restaurant.model.validation.Notification;
 import restaurant.service.card.CardService;
 import restaurant.service.dish.DishService;
+import restaurant.service.employee.EmployeeService;
 import restaurant.service.orderr.OrderrService;
 import restaurant.service.user.UserService;
 
@@ -27,24 +31,25 @@ public class ClientController {
 
     @Autowired
     private UserService userService;
-
     @Autowired
     private CardService cardService;
-
     @Autowired
     private DishService dishService;
-
     @Autowired
     private OrderrService orderrService;
+    @Autowired
+    private EmployeeService employeeService;
 
 
     @RequestMapping(value = "/client", method = RequestMethod.GET)
-    public String showCardPage() {
+    public String showCardPage(Model model, Authentication authentication) {
+        List<Card> items = cardService.findByClientName(authentication.getName());
+        model.addAttribute("cards", items);
         return "client";
     }
 
     @RequestMapping(value = "/clientPage", method = RequestMethod.GET)
-    public String showClientMenu() {
+    public String showClientMenu(Authentication authentication) {
         return "clientPage";
     }
 
@@ -56,30 +61,15 @@ public class ClientController {
         boolean creditBool = false;
         if (credit.equalsIgnoreCase("credit")) creditBool = true;
         User client = userService.findByUsername(authentication.getName());
-
         Notification<Boolean> notification = cardService.addCard(accnr, month, year, sum, cvv, creditBool, client);
-        return showErrs(model, notification.getResult(), "Card added successfully!", notification.getFormattedErrors());
-    }
-
-    private String showErrs(Model model, boolean err, String succMessage, String errMessage) {
-        if (err) {
-            model.addAttribute("updUSucc", true);
-            model.addAttribute("updMessage2", succMessage);
-            return "client";
+        if (notification.hasErrors())
+            model.addAttribute("fMessage", notification.getFormattedErrors());
+        else {
+            model.addAttribute("sMessage", "Card added successfully!");
         }
-        model.addAttribute("updUErr", true);
-        model.addAttribute("updMessage", errMessage);
+        model.addAttribute("cards", cardService.findByClientName(authentication.getName()));
         return "client";
     }
-
-    //VIEW CARDS
-    @RequestMapping(value = "/cardView", params = "viewCards", method = RequestMethod.GET)
-    public String readCards(Authentication authentication, Model model) {
-        List<Card> items = cardService.findByClientName(authentication.getName());
-        model.addAttribute("cards", items);
-        return "client";
-    }
-
 
     /*********************ORDERS*****************/
     //SHOW ORDERS PAGE
@@ -107,7 +97,7 @@ public class ClientController {
             dishNr.put(dishService.findById(Long.parseLong(dishesIds[i])), Integer.parseInt(quan));
         }
         User user = userService.findByUsername(authentication.getName());
-        Notification<Boolean> notification = orderrService.addOrderr(dishNr, user);
+        orderrService.addOrderr(dishNr, user);
 
         Orderr orderr = orderrService.findByClientId(user.getId());
         showDishes(model, dishService.findAll(), orderrService.cartDishes(user), orderr);
@@ -122,50 +112,53 @@ public class ClientController {
             model.addAttribute("totalPrice", orderr.getReceit());
     }
 
-
     //plata propriu-zisa
     @RequestMapping(value = "/orders", params = "chk", method = RequestMethod.POST)
-    public String paypayOrder(Model model, HttpServletRequest request, Authentication authentication, @RequestParam String ccnum, @RequestParam int expmonth, @RequestParam int expyear, @RequestParam int cvv, @RequestParam(value = "ltt") String coordinates) {
-        if (coordinates.equalsIgnoreCase("")) {
-            showMessage(model, true, "", "You must give give your address by clicking on the map below!");
+    public String paypayOrder(Model model, Authentication authentication, @RequestParam String ccnum, @RequestParam int expmonth, @RequestParam int expyear, @RequestParam int cvv, @RequestParam(value = "ltt") String coordinates) {
+        User user = userService.findByUsername(authentication.getName());
+        if (orderrService.findByClientId(user.getId()) == null) {
+            model.addAttribute("failMessage", "There is no unprocessed order to pay!");
             return "orders";
         }
-
-        User user = userService.findByUsername(authentication.getName());
+        if (coordinates.equalsIgnoreCase("")) {
+            model.addAttribute("failMessage", "You must give give your address by clicking on the map below!");
+            return "orders";
+        }
         Orderr orderr = orderrService.findByClientId(user.getId());
         Notification<Boolean> checkCard = cardService.checkandPay(user, ccnum, expmonth, expyear, cvv, orderr.getReceit());
         if (checkCard.hasErrors()) {
-            showMessage(model, true, "", checkCard.getFormattedErrors());
+            model.addAttribute("failMessage", checkCard.getFormattedErrors());
             return "orders";
         }
-        orderrService.payOrderr(orderr, Double.parseDouble(coordinates.split(" ")[0]), Double.parseDouble(coordinates.split(" ")[1]));
+        model.addAttribute("distance",orderr.getDistance());
+        model.addAttribute("ordId",orderr.getId());
+        double distance = employeeService.getDistanceFromRestaurant(Double.parseDouble(coordinates.split(" ")[0]), Double.parseDouble(coordinates.split(" ")[1]));
+        orderrService.payOrderr(orderr, distance);
         showDishes(model, dishService.findAll(), null, null);
-        showMessage(model, false, "ALL done", "");
-
-        System.out.println("Lat " + coordinates.split(" ")[0] + " Long " + coordinates.split(" ")[1]);
+        model.addAttribute("succMessage", "Order payed. You will get news soon!");
         return "orders";
-    }
-
-    private void showMessage(Model model, boolean err, String succMessage, String failMessage) {
-        if (err) {
-            model.addAttribute("fail", true);
-            model.addAttribute("failMessage", failMessage);
-        } else {
-            model.addAttribute("succ", true);
-            model.addAttribute("succMessage", succMessage);
-        }
     }
 
     /*****REVIEWS***/
-    //GET REVIEW
     @RequestMapping(value = "/orders", params = "rew", method = RequestMethod.POST)
     public String getReview(Model model, HttpServletRequest request, Authentication authentication) {
         String[] stars = request.getParameterValues("star");
-        orderrService.setRating(stars[0], userService.findByUsername(authentication.getName()).getId());
-        model.addAttribute("succ", true);
-        model.addAttribute("succMessage", "Thank you for your review! Your opinion matters to us!");
+        Notification<Boolean> notification = orderrService.setRating(stars[0], userService.findByUsername(authentication.getName()).getId());
+        if (notification.hasErrors()) {
+            model.addAttribute("failMessage", notification.getFormattedErrors());
+        } else
+            model.addAttribute("succMessage", "Thank you for your review! Your opinion matters to us!");
+        User client=userService.findByUsername(authentication.getName());
+        showDishes(model, dishService.findAll(), orderrService.cartDishes(client), orderrService.findByClientId(client.getId()));
         return "orders";
     }
 
-
+    @MessageMapping("/hi")
+    @SendTo("/topic/greetings")
+    @RequestMapping(value = "/orders", method = RequestMethod.POST)
+    public Greeting sendOrderToEmployee(String message) {
+        message = message.replace("{", "");
+        message = message.replace("}", "");
+        return new Greeting(message);
+    }
 }

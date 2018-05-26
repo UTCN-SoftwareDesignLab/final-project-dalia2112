@@ -23,8 +23,8 @@ public class Orderr {
     @JoinColumn(name = "employee_id")
     private User employees;
     private int car;
-    private double coordLat;
-    private double coordLng;
+    private double distance;
+    private int waitingTime;
 
 
     public Map<Dish, Integer> getDishes() {
@@ -97,19 +97,19 @@ public class Orderr {
         this.car = car;
     }
 
-    public double getCoordLat() {
-        return coordLat;
+    public double getDistance() {
+        return distance;
     }
 
-    public void setCoordLat(double coordLat) {
-        this.coordLat = coordLat;
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
-    public double getCoordLng() {
-        return coordLng;
+    public int getWaitingTime() {
+        return waitingTime;
     }
 
-    public void setCoordLng(double coordLng) {
-        this.coordLng = coordLng;
+    public void setWaitingTime(int waitingTime) {
+        this.waitingTime = waitingTime;
     }
 }
