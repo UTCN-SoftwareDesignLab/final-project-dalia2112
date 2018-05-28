@@ -19,6 +19,10 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private DishRepository dishRepository;
 
+    public DishServiceImpl(DishRepository dishRepository) {
+        this.dishRepository = dishRepository;
+    }
+
     @Override
     public List<Dish> findAll() {
         return dishRepository.findAll();

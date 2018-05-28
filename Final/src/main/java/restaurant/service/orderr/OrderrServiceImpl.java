@@ -16,6 +16,9 @@ public class OrderrServiceImpl implements OrderrService {
     @Autowired
     private OrderrRepository orderrRepository;
 
+    public OrderrServiceImpl(OrderrRepository orderrRepository) {
+        this.orderrRepository = orderrRepository;
+    }
 
     @Override
     public List<Orderr> findAll() {

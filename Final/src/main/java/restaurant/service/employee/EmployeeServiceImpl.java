@@ -17,6 +17,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private OrderrRepository orderrRepository;
 
+    public EmployeeServiceImpl(OrderrRepository orderrRepository) {
+        this.orderrRepository = orderrRepository;
+    }
+
     @Override
     public List<String> getCars() {
         List<String> list = new ArrayList<>();

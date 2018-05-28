@@ -34,25 +34,6 @@ public class OrderrBuilder {
         return this;
     }
 
-//    public OrderrBuilder setAddress(String address) {
-//        orderr.setAddress(address);
-//        return this;
-//    }
-//
-//    public OrderrBuilder setCity(String city) {
-//        orderr.setCity(city);
-//        return this;
-//    }
-//
-//    public OrderrBuilder setState(String state) {
-//        orderr.setState(state);
-//        return this;
-//    }
-//
-//    public OrderrBuilder setZip(int zip) {
-//        orderr.setZip(zip);
-//        return this;
-//    }
 
     public OrderrBuilder setProcessed(boolean processed) {
         orderr.setProcessed(processed);
@@ -63,8 +44,14 @@ public class OrderrBuilder {
         orderr.setRating(rating);
         return this;
     }
+
     public OrderrBuilder setCar(int car) {
         orderr.setCar(car);
+        return this;
+    }
+
+    public OrderrBuilder setDistance(double distance) {
+        orderr.setDistance(distance);
         return this;
     }
 
