@@ -57,6 +57,7 @@ public class Constants {
         private static final String[] INGREDIENTS2=new String[]{DOUGH,VANILLA,FRUITS};
         private static final String[] INGREDIENTS3=new String[]{PORK,POTATO,CHILLY};
         private static final String[][] ALLINGREDIENTS={INGREDIENTS1,INGREDIENTS2,INGREDIENTS3};
+        public static final float[] defaultDishesPrices={20,30,40};
         public static final List<List<Ingredient>> getIngredients(){
             List<List<Ingredient>> list=new ArrayList<>();
             for(String[] ingr:ALLINGREDIENTS){
@@ -72,7 +73,17 @@ public class Constants {
             }
             return list;
         }
+    }
 
+    public static class Delivery{
+        public static final int timeToFindResidence=20;
+        public static final int minutes=60;
+        public static final int speed=50;
+        public static final int maximumDistanceDelivery=15;
+        public static final int maximumOrdersPerCar=2;
+        public static final double restaurantLattitude=-16.541324;
+        public static final double restaurantLongitude=-151.734107;
+        public static final double earthRadius=6378.1;
 
     }
 }

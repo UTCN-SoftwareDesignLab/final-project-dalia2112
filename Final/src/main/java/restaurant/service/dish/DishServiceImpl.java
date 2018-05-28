@@ -34,7 +34,7 @@ public class DishServiceImpl implements DishService {
             Dish dish = new DishBuilder()
                     .setName(Constants.Dishes.NAMES[i])
                     .setIngredients(Constants.Dishes.getIngredients().get(i))
-                    .setMoney(i * 10 + 20)
+                    .setMoney(Constants.Dishes.defaultDishesPrices[i])
                     .build();
             dishRepository.save(dish);
         }
@@ -44,7 +44,6 @@ public class DishServiceImpl implements DishService {
     public Notification<Boolean> addDish(String name, Ingredient ingredient, float price) {
 
         Notification<Boolean> notification = new Notification<>();
-//        DishValidator
         Dish dish = dishRepository.findByName(name);
         List<Ingredient> ingredients;
         if (dish == null) {
@@ -68,7 +67,6 @@ public class DishServiceImpl implements DishService {
             ingredients = dish.getIngredients();
             ingredients.add(ingredient);
             dish.setIngredients(ingredients);
-            System.out.println("NU era null " + ingredients.get(0).getName());
             dishRepository.save(dish);
             notification.setResult(true);
         }
@@ -82,8 +80,13 @@ public class DishServiceImpl implements DishService {
         if (dish != null) {
             dish.setName(name);
             dish.setPrice(price);
-            notification.setResult(true);
-            dishRepository.save(dish);
+            DishValidator validator=new DishValidator(dish);
+            if(!validator.validate())
+                notification.addError(validator.getFormattedErrors());
+            else {
+                notification.setResult(true);
+                dishRepository.save(dish);
+            }
         } else {
             notification.addError("Dish does not exist!");
             notification.setResult(false);

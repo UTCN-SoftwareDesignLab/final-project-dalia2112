@@ -9,10 +9,7 @@ import restaurant.model.builder.OrderrBuilder;
 import restaurant.model.validation.Notification;
 import restaurant.repository.OrderrRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OrderrServiceImpl implements OrderrService {
@@ -25,7 +22,7 @@ public class OrderrServiceImpl implements OrderrService {
         return orderrRepository.findAll();
     }
 
-    public Orderr getUnprocessed(List<Orderr> orderrs) {
+    private Orderr getUnprocessedOrderrs(List<Orderr> orderrs) {
         for (Orderr orderr : orderrs) {
             if (!orderr.isProcessed())
                 return orderr;
@@ -41,7 +38,7 @@ public class OrderrServiceImpl implements OrderrService {
         for (Dish dish1 : dishMap.keySet()) {
             sum += dish1.getPrice() * dishMap.get(dish1);
         }
-        if (getUnprocessed(orderr1) == null) {
+        if (getUnprocessedOrderrs(orderr1) == null) {
             Orderr orderr = new OrderrBuilder()
                     .setDishes(dishMap)
                     .setClient(client)
@@ -53,7 +50,7 @@ public class OrderrServiceImpl implements OrderrService {
             notification.setResult(true);
             orderrRepository.save(orderr);
         } else { //the order exists and we add dishes to it
-            Orderr orderr = getUnprocessed(orderr1);
+            Orderr orderr = getUnprocessedOrderrs(orderr1);
             Map tmp = new HashMap(dishMap);
             tmp.keySet().removeAll(orderr.getDishes().keySet()); //get all new dished added
             orderr.getDishes().putAll(tmp);
@@ -67,14 +64,15 @@ public class OrderrServiceImpl implements OrderrService {
     @Override
     public List<String> cartDishes(User user) {
         if (orderrRepository.findByClientId(user.getId()).size() == 0) return null;
-        Orderr orderr = getUnprocessed(orderrRepository.findByClientId(user.getId()));
+        Orderr orderr = getUnprocessedOrderrs(orderrRepository.findByClientId(user.getId()));
         if (orderr == null) return null;
-        Map<Dish, Integer> dishist = getUnprocessed(orderrRepository.findByClientId(user.getId())).getDishes();
+        //This hashmap represents the dishes and their quantities in an order
+        Map<Dish, Integer> orderDishes = getUnprocessedOrderrs(orderrRepository.findByClientId(user.getId())).getDishes();
         List<String> list = new ArrayList<>();
-        for (Dish dish : dishist.keySet()) {
-            float subprice = dish.getPrice() * dishist.get(dish);
-            if (!list.contains(dish.getName() + "\t        x " + dishist.get(dish) + "\t         " + subprice)) {
-                list.add(dish.getName() + "\t        x " + dishist.get(dish) + "\t         " + subprice);
+        for (Dish dish : orderDishes.keySet()) {
+            float subprice = dish.getPrice() * orderDishes.get(dish);
+            if (!list.contains(dish.getName() + "\t        x " + orderDishes.get(dish) + "\t         " + subprice)) {
+                list.add(dish.getName() + "\t        x " + orderDishes.get(dish) + "\t         " + subprice);
             }
         }
         return list;
@@ -84,7 +82,7 @@ public class OrderrServiceImpl implements OrderrService {
     @Override
     public Orderr findByClientId(long id) {
         if (orderrRepository.findByClientId(id).size() == 0) return null;
-        return getUnprocessed(orderrRepository.findByClientId(id));
+        return getUnprocessedOrderrs(orderrRepository.findByClientId(id));
     }
 
 
@@ -104,10 +102,10 @@ public class OrderrServiceImpl implements OrderrService {
     }
 
     public Notification<Boolean> setRating(String star, long userId) {
-        Notification<Boolean>notification=new Notification<>();
-        int starInt = Integer.parseInt(star.substring(4, 5));
+        Notification<Boolean> notification = new Notification<>();
+        int starInt = new Scanner(star).useDelimiter("\\D+").nextInt();
         Orderr orderr = getLastProcessedOrderr(orderrRepository.findByClientId(userId));
-        if(orderr==null){
+        if (orderr == null) {
             notification.addError("You must pay the order first and then you can rate us!");
             notification.setResult(false);
             return notification;

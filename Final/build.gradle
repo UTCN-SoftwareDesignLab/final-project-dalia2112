@@ -62,6 +62,9 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
 // https://mvnrepository.com/artifact/com.google.code.geocoder-java/geocoder-java
     compile group: 'com.google.code.geocoder-java', name: 'geocoder-java', version: '0.15'
+    compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.1'
+    compile('org.springframework.boot:spring-boot-starter-mail')
+
 
 
 

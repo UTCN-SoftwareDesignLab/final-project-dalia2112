@@ -27,4 +27,11 @@ public class DishValidator {
         if (money < 0.0)
             errors.add("Not enough money!");
     }
+
+    public String getFormattedErrors() {
+        String result = "";
+        for (String error : getErrors())
+            result += error + "\n \n";
+        return result;
+    }
 }

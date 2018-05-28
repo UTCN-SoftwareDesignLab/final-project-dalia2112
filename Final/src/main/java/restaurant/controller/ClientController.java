@@ -75,8 +75,10 @@ public class ClientController {
     //SHOW ORDERS PAGE
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String showOrderPage(Model model, Authentication authentication) {
-        if (dishService.findAll().size() == 0)
+        if (dishService.findAll().size() == 0) {
             dishService.createDishes();
+            System.out.println("nu era");
+        } else System.out.println("era ceva");
         User user = userService.findByUsername(authentication.getName());
         Orderr orderr = orderrService.findByClientId(user.getId());
         showDishes(model, dishService.findAll(), orderrService.cartDishes(user), orderr);
@@ -130,8 +132,8 @@ public class ClientController {
             model.addAttribute("failMessage", checkCard.getFormattedErrors());
             return "orders";
         }
-        model.addAttribute("distance",orderr.getDistance());
-        model.addAttribute("ordId",orderr.getId());
+        model.addAttribute("distance", orderr.getDistance());
+        model.addAttribute("ordId", orderr.getId());
         double distance = employeeService.getDistanceFromRestaurant(Double.parseDouble(coordinates.split(" ")[0]), Double.parseDouble(coordinates.split(" ")[1]));
         orderrService.payOrderr(orderr, distance);
         showDishes(model, dishService.findAll(), null, null);
@@ -148,7 +150,7 @@ public class ClientController {
             model.addAttribute("failMessage", notification.getFormattedErrors());
         } else
             model.addAttribute("succMessage", "Thank you for your review! Your opinion matters to us!");
-        User client=userService.findByUsername(authentication.getName());
+        User client = userService.findByUsername(authentication.getName());
         showDishes(model, dishService.findAll(), orderrService.cartDishes(client), orderrService.findByClientId(client.getId()));
         return "orders";
     }

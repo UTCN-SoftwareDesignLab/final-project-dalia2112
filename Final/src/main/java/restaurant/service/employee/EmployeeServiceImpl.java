@@ -2,12 +2,14 @@ package restaurant.service.employee;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import restaurant.model.Constants;
 import restaurant.model.Orderr;
 import restaurant.model.validation.Notification;
 import restaurant.repository.OrderrRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -18,7 +20,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<String> getCars() {
         List<String> list = new ArrayList<>();
-        for (int i = 1; i < 11; i++) {
+        for (int i = 1; i < 5; i++) {
             list.add("Car " + i);
         }
         return list;
@@ -27,7 +29,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<String> getAvailableCars() {
         List<String> car = new ArrayList<>();
         for (String cars : getCars()) {
-            List<Orderr> orderrs1 = orderrRepository.findByCar(Integer.parseInt(cars.substring(4, 5)));
+            List<Orderr> orderrs1 = orderrRepository.findByCar(new Scanner(cars).useDelimiter("\\D+").nextInt());
             if (orderrs1.size() < 2)
                 car.add(cars);
         }
@@ -36,13 +38,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public Notification<Boolean> setCarToOrder(int car, Orderr orderr) {
         Notification<Boolean> notification = new Notification<>();
-        if (orderr.getDistance() > 15) {
+        if (orderr.getDistance() > Constants.Delivery.maximumDistanceDelivery) {
             notification.addError("Delivery address of order " + orderr.getId() + " is greater than 15 km! Your money will be returned.");
             notification.setResult(false);
             return notification;
         }
         List<Orderr> orderrs = orderrRepository.findByCar(car);
-        if (orderrs.size() < 2) {
+        if (orderrs.size() < Constants.Delivery.maximumOrdersPerCar) {
             orderr.setCar(car);
             calcWaitingTime(orderr);
             orderrRepository.save(orderr);
@@ -78,8 +80,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public double getDistanceFromRestaurant(double lat, double lng) {
-        double restaurantLatitude = -16.541324 * (Math.PI / 180);
-        double restaurantLongitude = -151.734107 * (Math.PI / 180);
+        double restaurantLatitude = Constants.Delivery.restaurantLattitude * (Math.PI / 180);
+        double restaurantLongitude = Constants.Delivery.restaurantLongitude * (Math.PI / 180);
         double chosenLatitude = lat * (Math.PI / 180);
         double chosenLongitude = lng * (Math.PI / 180);
         double diffLat = (restaurantLatitude - chosenLatitude);
@@ -87,8 +89,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         double sinLat = Math.sin(diffLat / 2);
         double sinLng = Math.sin(diffLng / 2);
         double a = Math.pow(sinLat, 2.0) + Math.cos(restaurantLatitude) * Math.cos(chosenLatitude) * Math.pow(sinLng, 2.0);
-        double earth_radius = 6378.1;
-        double distance = earth_radius * 2 * Math.asin(Math.min(1, Math.sqrt(a)));
+        double distance = Constants.Delivery.earthRadius * 2 * Math.asin(Math.min(1, Math.sqrt(a)));
         return distance;
     }
 
@@ -98,14 +99,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         for (Orderr orderr1 : orderrRepository.findByCar(orderr.getCar())) {
             sumTime += orderr.getWaitingTime();
             if (orderr1 == orderr) {
-                int mins = 20+(int)(60 * (sumTime + distance / 50));
+                int mins = Constants.Delivery.timeToFindResidence+(int)(Constants.Delivery.minutes * (sumTime + distance / Constants.Delivery.speed));
                 orderr1.setWaitingTime(mins);
                 orderrRepository.save(orderr1);
                 break;
             }
         }
         int hour = 0, min = orderr.getWaitingTime();
-        while (min > 60) {
+        while (min > Constants.Delivery.minutes) {
             hour++;
             min -= 60;
         }

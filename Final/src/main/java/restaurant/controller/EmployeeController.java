@@ -1,6 +1,10 @@
 package restaurant.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,8 +13,10 @@ import restaurant.model.Card;
 import restaurant.model.Orderr;
 import restaurant.model.User;
 import restaurant.model.validation.Notification;
+import restaurant.service.bill.BillService;
 import restaurant.service.card.CardService;
 import restaurant.service.employee.EmployeeService;
+import restaurant.service.mail.NotificationServiceImpl;
 import restaurant.service.orderr.OrderrService;
 import restaurant.service.user.UserService;
 
@@ -27,7 +33,12 @@ public class EmployeeController {
     private UserService userService;
     @Autowired
     private CardService cardService;
+    @Autowired
+    private NotificationServiceImpl notificationService;
+    @Autowired
+    private BillService billService;
 
+    private Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
     @RequestMapping(value = "/delivery", method = RequestMethod.GET)
     public String showOrders(Model model, HttpServletRequest request) {
@@ -42,8 +53,7 @@ public class EmployeeController {
 
     //set cars with orders => MAX 2 ORDERS/CAR
     @RequestMapping(value = "/delivery", params = "rew", method = RequestMethod.POST)
-//    @ResponseBody
-    public String setCars(Model model, HttpServletRequest request) {
+    public String setCars(Model model, HttpServletRequest request, Authentication authentication) {
         String[] orderIds = request.getParameterValues("cbx");
         if (orderIds == null || orderIds.length == 0) {
             return "delivery";
@@ -59,19 +69,25 @@ public class EmployeeController {
                 orderrService.delete(orderr);
                 model.addAttribute("errMsg", notification.getFormattedErrors());
             }
-            model.addAttribute("succMsg", "The command has been delivered. Waiting time: "+employeeService.calcWaitingTime(orderr));
+            orderr.setEmployees(userService.findByUsername(authentication.getName()));
+            billService.generateBill(orderr);
+            model.addAttribute("succMsg", "The command has been delivered. Waiting time: " + employeeService.calcWaitingTime(orderr));
             List<Orderr> orderrList = employeeService.getAllProcessedOrders();
             orderrList.removeAll(employeeService.getDeliveredOrders());
             model.addAttribute("orders", orderrList);
             model.addAttribute("orders2", employeeService.getDeliveredOrders());
             model.addAttribute("list", employeeService.getAvailableCars());
-//            try {
-//                sendEmail();
-//                System.out.println("EMAIL SENT!");
-//            } catch (Exception e) {
-//                System.out.println("NOOOOOOOOO EMAIL SENT!");
-//                e.printStackTrace();
-//            }
+        }
+        return "delivery";
+    }
+
+    @RequestMapping(value = "/delivery", params = "sendMail", method = RequestMethod.POST)
+    public String sendMail() {
+        try {
+            notificationService.sendNotification("daliacopaciu@gmail.com");
+        } catch (MailException m) {
+            m.printStackTrace();
+            logger.info("Error mail " + m.getMessage());
         }
         return "delivery";
     }
@@ -86,6 +102,7 @@ public class EmployeeController {
 //
 //        sender.send(message);
 //    }
+
 
 }
 
